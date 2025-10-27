@@ -1,0 +1,28 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 原有属性保留 -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- 新增：全屏核心配置 -->
+        <item name="android:windowFullscreen">true</item> <!-- 隐藏状态栏 -->
+        <item name="android:windowContentOverlay">@null</item> <!-- 移除系统默认内边距 -->
+        <item name="android:windowTranslucentStatus">true</item> <!-- 允许内容延伸到状态栏区域 -->
+        <item name="android:windowTranslucentNavigation">true</item> <!-- 允许内容延伸到导航栏区域 -->
+    </style>
+
+    <style name="common_button_style">
+        <!-- 保持原有按钮样式不变 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/btn_next_height</item>
+        <item name="android:background">@drawable/selector_red_corners_button</item>
+        <item name="android:padding">6.0dip</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+</resources>

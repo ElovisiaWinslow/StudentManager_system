@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 导入功能区域标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="数据导入"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- 导入按钮区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <Button
+            android:id="@+id/import_students"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="导入学生数据"
+            android:layout_marginRight="8dp"
+            android:backgroundTint="@color/design_default_color_primary"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/import_teachers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="导入教师数据"
+            android:layout_marginLeft="8dp"
+            android:backgroundTint="@color/design_default_color_primary"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/import_courses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="导入课程数据"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/design_default_color_primary"
+        android:textColor="@android:color/white"/>
+
+    <!-- 导出功能区域标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="数据导出"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- 导出按钮区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <Button
+            android:id="@+id/export_students"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="导出学生数据"
+            android:layout_marginRight="8dp"
+            android:backgroundTint="@color/design_default_color_secondary"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/export_teachers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="导出教师数据"
+            android:layout_marginLeft="8dp"
+            android:backgroundTint="@color/design_default_color_secondary"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/export_courses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="导出课程数据"
+        android:backgroundTint="@color/design_default_color_secondary"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>

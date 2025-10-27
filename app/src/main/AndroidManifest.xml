@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 关键：移除了原有的 package 属性 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
+        android:theme="@style/AppTheme">
+
+
+        <!-- 所有 Activity 配置无需修改（相对路径依赖 build.gradle 中的 namespace） -->
+        <activity android:name=".Activity.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".Activity.admin_login_activity" />
+        <activity android:name=".Activity.teacher_login_activity" />
+        <activity android:name=".Activity.student_login_activity" />
+        <activity android:name=".Activity.adminActivity" />
+        <activity android:name=".Activity.teacherActivity" />
+        <activity android:name=".Activity.TeacherCourseStudentsActivity" />
+        <activity android:name=".Activity.studentActivity" />
+        <activity android:name=".Activity.teacherinfoActivity" />
+        <activity android:name=".Activity.studentinfoActivity" />
+        <activity android:name=".Activity.add_studentinfoActivity" />
+        <activity android:name=".Activity.add_teacherinfoActivity" />
+        <activity android:name=".Activity.student_total_score" />
+        <activity android:name=".Activity.DataManagementActivity" />
+        <activity android:name=".Activity.CourseListActivity" />
+        <activity android:name=".Activity.SelectedCoursesActivity" />
+
+    </application>
+
+</manifest>

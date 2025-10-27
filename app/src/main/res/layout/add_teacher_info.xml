@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <!-- 教师ID -->
+    <TextView
+        android:id="@+id/teacher_id_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="35dp"
+        android:text="教师ID："
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/add_teacher_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_toRightOf="@+id/teacher_id_label"
+        android:layout_alignBottom="@+id/teacher_id_label"
+        android:inputType="text" />
+
+    <!-- 姓名 -->
+    <TextView
+        android:id="@+id/teacher_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teacher_id_label"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:text="姓 名："
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/add_teacher_layout_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_teacher_layout_id"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/teacher_id_label" />
+
+    <!-- 密码 -->
+    <TextView
+        android:id="@+id/teacher_password_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teacher_name_label"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:text="密 码："
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/add_teacher_layout_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_teacher_layout_name"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/teacher_id_label"
+        android:inputType="numberPassword" />
+
+    <!-- 性别 -->
+    <TextView
+        android:id="@+id/teacher_sex_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teacher_password_label"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:text="性 别："
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/add_teacher_layout_sex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_teacher_layout_password"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/teacher_id_label"
+        android:hint="男/女" />
+
+    <!-- 电话 -->
+    <TextView
+        android:id="@+id/teacher_phone_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teacher_sex_label"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:text="电 话："
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/add_teacher_layout_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_teacher_layout_sex"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/teacher_id_label"
+        android:inputType="phone" />
+
+    <!-- 任教科目 -->
+    <TextView
+        android:id="@+id/teacher_subject_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teacher_phone_label"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:text="任教科目："
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/add_teacher_layout_subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_teacher_layout_phone"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/teacher_id_label" />
+
+    <!-- 确定按钮 -->
+    <Button
+        android:id="@+id/add_teacher_layout_sure"
+        style="@style/common_button_style"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
+        android:text="确定" />
+
+</RelativeLayout>

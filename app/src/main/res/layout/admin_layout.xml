@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e6e6e6"
+    android:padding="16dp">
+
+    <!-- 顶部标题区域 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintGuide_end="591dp" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="欢迎使用NJUPT 管理系统"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_top"
+        app:layout_constraintVertical_bias="0.7" />
+
+    <com.example.studentmanager_system.Tools.RoundImageView
+        android:id="@+id/iv_admin_photo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/admin_photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_top"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <!-- 功能按钮区域 -->
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/grid_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:columnCount="2"
+        app:rowCount="3"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/admin_activity_forceOffline"
+        app:alignmentMode="alignMargins"
+        app:columnOrderPreserved="false"
+        app:rowOrderPreserved="false"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:ignore="MissingClass">
+
+        <Button
+            style="@style/common_button_style"
+            android:id="@+id/admin_activity_select"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="查询学生信息"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:layout_margin="8dp"
+            android:padding="16dp"/>
+
+        <Button
+            style="@style/common_button_style"
+            android:id="@+id/admin_activity_add"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="添加学生信息"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:layout_margin="8dp"
+            android:padding="16dp"/>
+
+        <Button
+            style="@style/common_button_style"
+            android:id="@+id/admin_teacher_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="教师信息管理"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:layout_margin="8dp"
+            android:padding="16dp"/>
+
+        <Button
+            style="@style/common_button_style"
+            android:id="@+id/admin_activity_add_teacher"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="添加教师信息"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:layout_margin="8dp"
+            android:padding="16dp"/>
+
+        <Button
+            style="@style/common_button_style"
+            android:id="@+id/admin_activity_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="查看总成绩排名"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:layout_margin="8dp"
+            android:padding="16dp"/>
+
+        <Button
+            style="@style/common_button_style"
+            android:id="@+id/data_manage_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="数据导入导出管理"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:layout_margin="8dp"
+            android:padding="16dp"/>
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <!-- 底部操作区域 -->
+    <TextView
+        android:id="@+id/admin_activity_forceOffline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="强制下线"
+        android:textSize="16sp"
+        android:textColor="@color/vertical_sep_color"
+        android:padding="12dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

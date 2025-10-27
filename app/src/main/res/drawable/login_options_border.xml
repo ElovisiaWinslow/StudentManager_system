@@ -1,0 +1,12 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" /> <!-- 内部填充为白色，与原卡片一致 -->
+    <stroke
+        android:width="2dp"
+        android:color="#3498DB" /> <!-- 边框颜色（选用学校主题蓝，可自定义） -->
+    <corners android:radius="16dp" /> <!-- 圆角，与内部元素风格协调 -->
+    <padding
+        android:left="12dp"
+        android:top="12dp"
+        android:right="12dp"
+        android:bottom="12dp" /> <!-- 内边距，让内容与边框有间距 -->
+</shape>

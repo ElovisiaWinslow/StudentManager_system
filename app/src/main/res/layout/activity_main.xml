@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="0dp"
+    android:paddingTop="0dp"
+    android:background="#f5f5f5"
+    app:layout_optimizationLevel="none"
+    tools:context=".Activity.MainActivity">
+
+    <ImageView
+        android:id="@+id/bottom_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/library_3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:alpha="0.7"
+        android:contentDescription="背景图"
+        tools:ignore="MissingConstraints"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="60dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/school_logo"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="南京邮电大学校徽"
+                android:src="@drawable/njupt_logo"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/main_activity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NJUPT学生管理系统"
+                android:letterSpacing="0.05"
+                android:textColor="#333333"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="请选择用户类型"
+                android:textStyle="italic"
+                android:textColor="#666666"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="80dp"
+            android:alpha="0.9"
+            android:background="@drawable/card_background"
+            android:elevation="8dp"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/main_activity_admin_container"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/login_options_border"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.example.studentmanager_system.Tools.RoundImageView
+                    android:id="@+id/main_activity_admin_pic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="#F0FFFF"
+                    android:padding="8dp"
+                    android:src="@drawable/admin_photo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="管理员登录"
+                    android:textColor="#333333"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/wifi"
+                    app:tint="#999999" />
+            </LinearLayout>
+
+            <!-- 教师登录选项 -->
+
+            <LinearLayout
+                android:id="@+id/main_activity_teacher_container"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/login_options_border"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.example.studentmanager_system.Tools.RoundImageView
+                    android:id="@+id/main_activity_teacher_pic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="#F0FFFF"
+                    android:padding="8dp"
+                    android:src="@drawable/teacher_photo" /> <!-- 需添加教师图标资源 -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="教师登录"
+                    android:textColor="#333333"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/wifi"
+                    app:tint="#999999" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/main_activity_student_container"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/login_options_border"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.example.studentmanager_system.Tools.RoundImageView
+                    android:id="@+id/main_activity_student_pic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="#F0FFFF"
+                    android:padding="8dp"
+                    android:src="@drawable/student_photo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="学生登录"
+                    android:textColor="#333333"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/wifi"
+                    app:tint="#999999" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 仅修改版权文字：移出内部LinearLayout并调整样式+位置 -->
+    <TextView
+        android:id="@+id/copyright_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NJUPT © 2025 学生管理系统"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="20dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
