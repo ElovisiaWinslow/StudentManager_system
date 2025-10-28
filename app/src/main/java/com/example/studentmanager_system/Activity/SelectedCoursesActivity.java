@@ -42,7 +42,7 @@ public class SelectedCoursesActivity extends AppCompatActivity {
 
         // 已选课程列表中只显示退课按钮
         CourseAdapter adapter = new CourseAdapter(this, selectedCourses,
-                dbHelper.getSelectedCourseIds(studentId), studentId);
+                dbHelper.getSelectedCourseIds(studentId));
         adapter.setShowOnlyDrop(true); // 自定义适配器方法，只显示退课按钮
         adapter.setOnCourseSelectListener((courseId, isSelect) -> {
             // 已选课程列表中只有退课操作（isSelect恒为false）

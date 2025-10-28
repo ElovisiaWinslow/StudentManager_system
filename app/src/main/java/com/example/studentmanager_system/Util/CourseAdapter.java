@@ -8,19 +8,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.studentmanager_system.R;
 import com.example.studentmanager_system.Tools.Course;
-
 import java.util.List;
 
 public class CourseAdapter extends BaseAdapter {
-    private Context context;
-    private List<Course> courseList;
-    private List<String> selectedCourseIds;
-    private String studentId;
-    private myDatabaseHelper dbHelper;
+    private final Context context;
+    private final List<Course> courseList;
+    private final List<String> selectedCourseIds;
+
+
     // 定义选课状态监听器
     public interface OnCourseSelectListener {
         void onSelect(String courseId, boolean isSelect); // true为选课，false为退课
@@ -39,13 +36,10 @@ public class CourseAdapter extends BaseAdapter {
 
     // 构造方法
     public CourseAdapter(Context context, List<Course> courseList,
-                         List<String> selectedCourseIds, String studentId) {
+                         List<String> selectedCourseIds) {
         this.context = context;
         this.courseList = courseList;
         this.selectedCourseIds = selectedCourseIds;
-        this.studentId = studentId;
-        // 使用单例模式获取数据库实例（避免内存泄漏）
-        this.dbHelper = myDatabaseHelper.getInstance(context);
     }
 
     @Override
@@ -87,23 +81,26 @@ public class CourseAdapter extends BaseAdapter {
                 course.getTeacherName() : "未知"));
         holder.tvCourseInfo.setText("学分: " + course.getCredit() + " | 学时: " + course.getHours());
 
-        // 关键修改：先判断是否为“仅显示退课”模式（已选课程列表）
+        // 关键修改：先判断是否为"仅显示退课"模式（已选课程列表）
         boolean isSelected = selectedCourseIds.contains(course.getId());
         if (showOnlyDrop) {
-            // 已选课程列表：强制显示“退课”按钮，且按钮可点击
+            // 已选课程列表：强制显示"退课"按钮，且按钮可点击
             holder.btnSelectCourse.setText("退课");
             holder.btnSelectCourse.setEnabled(true);
-            holder.btnSelectCourse.setBackgroundColor(context.getResources().getColor(android.R.color.holo_red_light)); // 红色区分退课
+            // 修复：使用 ContextCompat.getColor() 替代过时的 getResources().getColor()
+            holder.btnSelectCourse.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, android.R.color.holo_red_light)); // 红色区分退课
         } else {
-            // 普通选课列表：按原逻辑显示“选课”/“已选”
+            // 普通选课列表：按原逻辑显示"选课"/"已选"
             if (isSelected) {
                 holder.btnSelectCourse.setText("已选");
                 holder.btnSelectCourse.setEnabled(false);
-                holder.btnSelectCourse.setBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
+                // 修复：使用 ContextCompat.getColor() 替代过时的 getResources().getColor()
+                holder.btnSelectCourse.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, android.R.color.darker_gray));
             } else {
                 holder.btnSelectCourse.setText("选课");
                 holder.btnSelectCourse.setEnabled(true);
-                holder.btnSelectCourse.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_light));
+                // 修复：使用 ContextCompat.getColor() 替代过时的 getResources().getColor()
+                holder.btnSelectCourse.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, android.R.color.holo_blue_light));
             }
         }
 

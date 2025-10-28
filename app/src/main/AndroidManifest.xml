@@ -25,7 +25,11 @@
         <activity android:name=".Activity.admin_login_activity" />
         <activity android:name=".Activity.teacher_login_activity" />
         <activity android:name=".Activity.student_login_activity" />
+
         <activity android:name=".Activity.adminActivity" />
+        <activity android:name=".Activity.AdminManagementActivity" />
+        <activity android:name=".Activity.AdminMangeStudentActivity" />
+
         <activity android:name=".Activity.teacherActivity" />
         <activity android:name=".Activity.TeacherCourseStudentsActivity" />
         <activity android:name=".Activity.studentActivity" />

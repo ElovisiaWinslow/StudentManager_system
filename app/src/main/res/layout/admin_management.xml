@@ -56,126 +56,123 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 学生管理卡片 -->
+            <!-- 人员管理卡片 - 使用GridLayout重构 -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_student_management"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background"
-                android:elevation="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_student"
-                        android:layout_marginEnd="16dp"
-                        app:tint="#4CAF50" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="学生管理"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#333333" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="查看、添加、修改和删除学生信息"
-                            android:textSize="14sp"
-                            android:textColor="#666666"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_right"
-                        app:tint="#999999" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- 教师管理卡片 -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_teacher_management"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background"
-                android:elevation="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
+                app:cardElevation="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:padding="20dp">
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_teacher"
-                        android:layout_marginEnd="16dp"
-                        app:tint="#2196F3" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:text="👥 人员管理"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:layout_marginBottom="12dp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="教师管理"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#333333" />
+                    <androidx.gridlayout.widget.GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:columnCount="2"
+                        app:rowCount="1"
+                        app:alignmentMode="alignMargins"
+                        app:columnOrderPreserved="false">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="查看、添加、修改和删除教师信息"
-                            android:textSize="14sp"
-                            android:textColor="#666666"
-                            android:layout_marginTop="4dp" />
+                        <!-- 学生管理卡片 -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_student_management"
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_margin="6dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="#E8F5E9"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
 
-                    </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_right"
-                        app:tint="#999999" />
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_student"
+                                    app:tint="#4CAF50" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="学生管理"
+                                    android:textSize="12sp"
+                                    android:textColor="#4CAF50"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="6dp" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- 教师管理卡片 -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_teacher_management"
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_margin="6dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="#E3F2FD"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_teacher"
+                                    app:tint="#2196F3" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="教师管理"
+                                    android:textSize="12sp"
+                                    android:textColor="#2196F3"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="6dp" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </androidx.gridlayout.widget.GridLayout>
 
                 </LinearLayout>
 
@@ -188,8 +185,9 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background"
-                android:elevation="4dp">
+                app:cardElevation="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"

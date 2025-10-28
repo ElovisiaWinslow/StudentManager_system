@@ -96,7 +96,6 @@
                     android:id="@+id/main_activity_admin_pic"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="#F0FFFF"
                     android:padding="8dp"
                     android:src="@drawable/admin_photo" />
 
@@ -134,7 +133,6 @@
                     android:id="@+id/main_activity_teacher_pic"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="#F0FFFF"
                     android:padding="8dp"
                     android:src="@drawable/teacher_photo" /> <!-- 需添加教师图标资源 -->
 
@@ -169,7 +167,6 @@
                     android:id="@+id/main_activity_student_pic"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="#F0FFFF"
                     android:padding="8dp"
                     android:src="@drawable/student_photo" />
 

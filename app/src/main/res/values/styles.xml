@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- 原有属性保留 -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -18,7 +18,7 @@
         <!-- 保持原有按钮样式不变 -->
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/btn_next_height</item>
-        <item name="android:background">@drawable/selector_red_corners_button</item>
+        <item name="android:background">@drawable/selector_blue_corners_button</item>
         <item name="android:padding">6.0dip</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/font_large</item>

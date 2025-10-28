@@ -29,20 +29,49 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // 新增：启用详细的过时API警告
+        isCoreLibraryDesugaringEnabled = true
     }
+
     kotlinOptions {
         jvmTarget = "11"
+        // 新增：启用Kotlin的过时API警告
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-Xlint:deprecation",
+            "-opt-in=kotlin.RequiresOptIn"
+        )
     }
+
     buildFeatures {
         compose = true  // 保持 Compose 配置不变（若使用 Compose UI）
     }
+
+    // 新增：启用详细的构建警告
+    lint {
+        warningsAsErrors = false
+        abortOnError = false
+        checkDependencies = true
+        // 启用过时API检查
+        disable.addAll(listOf("GradleDependency", "ObsoleteLintCustomCheck"))
+        enable.addAll(listOf("Deprecation", "UnusedResources", "ObsoleteSdkInt"))
+    }
+}
+
+// 新增：配置所有任务的编译选项
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.addAll(listOf(
+        "-Xlint:deprecation",
+        "-Xlint:unchecked"
+    ))
+    options.isDeprecation = true
 }
 
 dependencies {
-    // 依赖项无需修改，保持原样即可
+    // 保持现有的 Compose 依赖
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -52,6 +81,17 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.gridlayout)
+
+    // 修改这些传统 View 系统依赖的版本
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.9.0")  // 改为 1.9.0 版本
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    // 其他依赖保持不变...
+    implementation("org.apache.poi:poi:5.2.4")
+    implementation("org.apache.poi:poi-ooxml:5.2.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,10 +99,4 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    // 添加 AppCompat 库（版本号可根据项目的 compileSdk 调整，建议使用最新稳定版）
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("org.apache.poi:poi:5.2.4")
-    implementation("org.apache.poi:poi-ooxml:5.2.4")
 }

@@ -1,50 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#f5f5f5"
+    tools:context=".Activity.teacher_login_activity">
 
-    <com.example.studentmanager_system.Tools.RoundImageView
-        android:id="@+id/teacher_layout_pic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:src="@drawable/teacher_photo"/>
-
-    <EditText
-        android:id="@+id/teacher_login_id_input"
+    <!-- 背景图片 - 与主界面保持一致 -->
+    <ImageView
+        android:id="@+id/teacher_login_background"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/teacher_layout_pic"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/input_box"
-        android:hint="请输入教师ID"
-        android:inputType="text"
-        android:gravity="center"/>
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/library_3"
+        android:alpha="0.7"
+        android:contentDescription="背景图"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <EditText
-        android:id="@+id/teacher_login_password_input"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/teacher_login_id_input"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/input_box"
-        android:hint="请输入密码"
-        android:inputType="numberPassword"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/teacher_login_button"
-        style="@style/common_button_style"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/teacher_login_password_input"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="20dp"
-        android:text="登录"/>
-</RelativeLayout>
+        <!-- 标题区域 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <!-- 教师头像 -->
+            <com.example.studentmanager_system.Tools.RoundImageView
+                android:id="@+id/teacher_layout_pic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="24dp"
+                android:padding="16dp"
+                android:src="@drawable/teacher_photo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="教师登录"
+                android:letterSpacing="0.05"
+                android:textColor="#333333"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="请输入教师ID和密码"
+                android:textStyle="italic"
+                android:textColor="#666666"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- 登录表单卡片 - 与主界面卡片风格一致 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:alpha="0.9"
+            android:background="@drawable/card_background"
+            android:elevation="8dp"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- 教师ID输入框 -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/teacher_id_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#666666">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/teacher_login_id_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:gravity="center_vertical"
+                    android:hint="请输入教师ID"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- 密码输入框 -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/teacher_password_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#666666">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/teacher_login_password_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:gravity="center_vertical"
+                    android:hint="请输入密码"
+                    android:inputType="numberPassword"
+                    android:maxLines="1"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- 登录按钮 -->
+            <Button
+                android:id="@+id/teacher_login_button"
+                style="@style/common_button_style"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="登录"
+                android:textAllCaps="false"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 版权信息 - 与主界面保持一致 -->
+    <TextView
+        android:id="@+id/teacher_copyright_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NJUPT © 2025 学生管理系统"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="20dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

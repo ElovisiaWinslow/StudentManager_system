@@ -15,7 +15,6 @@ public class CourseListActivity extends AppCompatActivity {
     private ListView courseListView;
     private myDatabaseHelper dbHelper;
     private String studentId;
-    private CourseAdapter adapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -44,7 +43,7 @@ public class CourseListActivity extends AppCompatActivity {
         List<String> selectedCourseIds = dbHelper.getSelectedCourseIds(studentId);
 
         // 设置适配器
-        adapter = new CourseAdapter(this, allCourses, selectedCourseIds, studentId);
+        CourseAdapter adapter = new CourseAdapter(this, allCourses, selectedCourseIds);
         // 选课状态变化监听（可选课/已选课切换）
         adapter.setOnCourseSelectListener((courseId, isSelect) -> {
             if (isSelect) {
