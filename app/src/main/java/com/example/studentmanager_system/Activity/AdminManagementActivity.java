@@ -1,22 +1,34 @@
 package com.example.studentmanager_system.Activity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import androidx.activity.OnBackPressedCallback;
 import com.example.studentmanager_system.R;
 import com.google.android.material.card.MaterialCardView;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * 管理页面 - 一级子页面
  */
-public class AdminManagementActivity extends Activity {
+public class AdminManagementActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_management);
+
+        // 注册新的返回监听器替代已弃用的onBackPressed()
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // 回到首页，结束当前管理页面
+                Intent intent = new Intent(AdminManagementActivity.this, adminActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         initViews();
         setupClickListeners();
@@ -32,7 +44,17 @@ public class AdminManagementActivity extends Activity {
         if (studentManagementCard != null) {
             studentManagementCard.setOnClickListener(v -> {
                 // 进入子页面，不结束当前页面
-                Intent intent = new Intent(AdminManagementActivity.this, AdminMangeStudentActivity.class);
+                Intent intent = new Intent(AdminManagementActivity.this, AdminManageStudentActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        // 教师管理卡片点击事件
+        MaterialCardView teacherManagementCard = findViewById(R.id.card_teacher_management);
+        if (teacherManagementCard != null) {
+            teacherManagementCard.setOnClickListener(v -> {
+                // 进入教师管理子页面，不结束当前页面
+                Intent intent = new Intent(AdminManagementActivity.this, AdminManageTeacherActivity.class);
                 startActivity(intent);
             });
         }
@@ -50,19 +72,5 @@ public class AdminManagementActivity extends Activity {
         }
 
         // 底部导航栏 - 管理按钮（当前页面，不需要处理）
-    }
-
-    /**
-     * 处理返回键按下事件
-     * 在管理页面按下返回：回到首页，结束当前页面
-     */
-    @SuppressLint("GestureBackNavigation")
-    @Override
-    public void onBackPressed() {
-        // 回到首页，结束当前管理页面
-        Intent intent = new Intent(this, adminActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
-        finish();
     }
 }

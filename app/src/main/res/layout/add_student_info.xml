@@ -1,187 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp">
+    android:background="#f0f2f5"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="35dp"
-        android:text="姓        名："
-        android:textSize="20sp" />
+        app:cardElevation="4dp"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <EditText
-        android:id="@+id/add_student_layout_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/name" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    <TextView
-        android:id="@+id/sex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="25dp"
-        android:text="性        别："
-        android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="添加学生信息"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:id="@+id/add_student_layout_sex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_student_layout_name"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="15dp"
-        android:layout_toRightOf="@+id/name" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundColor="#F5F5F5"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#666666">
 
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sex"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="25dp"
-        android:text="学        号："
-        android:textSize="20sp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_student_layout_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="姓        名"
+                    android:textSize="16sp" />
 
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/add_student_layout_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_student_layout_sex"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="15dp"
-        android:layout_toRightOf="@+id/name"
-        android:inputType="numberDecimal" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundColor="#F5F5F5"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#666666">
 
-    <TextView
-        android:id="@+id/number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/id"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="25dp"
-        android:text="手  机  号："
-        android:textSize="20sp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_student_layout_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="性        别"
+                    android:textSize="16sp" />
 
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/add_student_layout_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_student_layout_id"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="15dp"
-        android:layout_toRightOf="@+id/name"
-        android:inputType="numberDecimal" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundColor="#F5F5F5"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#666666">
 
-    <TextView
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/number"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="25dp"
-        android:text="密        码："
-        android:textSize="20sp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_student_layout_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="学        号"
+                    android:inputType="text"
+                    android:textSize="16sp" />
 
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/add_student_layout_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_student_layout_number"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/name"
-        android:inputType="numberDecimal" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundColor="#F5F5F5"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#666666">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_student_layout_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="手  机  号"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/math"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="25dp"
-        android:text="数学成绩："
-        android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundColor="#F5F5F5"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#666666">
 
-    <EditText
-        android:id="@+id/add_student_layout_math"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_student_layout_password"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/name"
-        android:inputType="numberDecimal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_student_layout_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="密        码"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/chinese"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/math"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="25dp"
-        android:text="语文成绩："
-        android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- 新增年级输入框 -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundColor="#F5F5F5"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#666666">
 
-    <EditText
-        android:id="@+id/add_student_layout_chinese"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_student_layout_math"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="12dp"
-        android:layout_toRightOf="@+id/name"
-        android:inputType="numberDecimal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_student_layout_grade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="年        级"
+                    android:inputType="number"
+                    android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/english"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/chinese"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="25dp"
-        android:text="英语成绩："
-        android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- 新增班级输入框 -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:boxBackgroundColor="#F5F5F5"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#666666">
 
-    <EditText
-        android:id="@+id/add_student_layout_english"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_student_layout_chinese"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="12dp"
-        android:layout_toRightOf="@+id/name"
-        android:inputType="numberDecimal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_student_layout_class"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="班        级"
+                    android:inputType="text"
+                    android:textSize="16sp" />
 
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/add_student_layout_sure"
-        style="@style/common_button_style"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="15dp"
-        android:gravity="center"
-        android:text="确定" />
+            <Button
+                android:id="@+id/add_student_layout_sure"
+                style="@style/common_button_style"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="确定"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                app:cornerRadius="8dp" />
 
+        </LinearLayout>
 
-</RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

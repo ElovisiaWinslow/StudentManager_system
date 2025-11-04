@@ -29,14 +29,12 @@ public class TeacherAdapter extends ArrayAdapter<Teacher> {
         Teacher teacher = getItem(position);
         @SuppressLint("ViewHolder") View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
 
-        TextView idTv = view.findViewById(R.id.teacher_item_id);
-        TextView nameTv = view.findViewById(R.id.teacher_item_name);
-        TextView subjectTv = view.findViewById(R.id.teacher_item_subject);
+        // 修改为使用 teacher_item.xml 中实际存在的 ID
+        TextView nameTv = view.findViewById(R.id.tv_teacher_name);
 
         assert teacher != null;
-        idTv.setText(teacher.getId());
-        nameTv.setText(teacher.getName());
-        subjectTv.setText(teacher.getSubject());
+        // 由于布局中只有一个 TextView，我们只显示教师姓名
+        nameTv.setText(teacher.getName() + " (" + teacher.getId() + ")");
 
         return view;
     }

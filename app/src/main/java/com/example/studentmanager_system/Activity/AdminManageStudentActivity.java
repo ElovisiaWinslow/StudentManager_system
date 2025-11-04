@@ -18,7 +18,7 @@ import java.util.Calendar;
 /**
  * 学生管理主页面 - 二级子页面
  */
-public class AdminMangeStudentActivity extends AppCompatActivity {
+public class AdminManageStudentActivity extends AppCompatActivity {
     private myDatabaseHelper dbHelper;
     private TextView tvTotalStudents, tvTotalClasses, tvWarningCount;
 
@@ -33,10 +33,7 @@ public class AdminMangeStudentActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // 回到管理页面，结束当前学生管理页面
-                Intent intent = new Intent(AdminMangeStudentActivity.this, AdminManagementActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+                // 直接销毁当前页面，返回上一个页面
                 finish();
             }
         });
@@ -61,7 +58,7 @@ public class AdminMangeStudentActivity extends AppCompatActivity {
                 String keyword = etSearch.getText().toString().trim();
                 if (!keyword.isEmpty()) {
                     // 启动学生信息页面并传递搜索关键字
-                    Intent intent = new Intent(AdminMangeStudentActivity.this, studentinfoActivity.class);
+                    Intent intent = new Intent(AdminManageStudentActivity.this, studentinfoActivity.class);
                     intent.putExtra("search_keyword", keyword);
                     startActivity(intent);
                 }
@@ -124,7 +121,7 @@ public class AdminMangeStudentActivity extends AppCompatActivity {
         CardView addStudentCard = findViewById(R.id.card_add_student);
         if (addStudentCard != null) {
             addStudentCard.setOnClickListener(v -> {
-                Intent intent = new Intent(AdminMangeStudentActivity.this, add_studentinfoActivity.class);
+                Intent intent = new Intent(AdminManageStudentActivity.this, add_studentinfoActivity.class);
                 // 传递标识，表示是新增学生而不是修改学生
                 intent.putExtra("haveData", "false");
                 startActivity(intent);
@@ -135,7 +132,7 @@ public class AdminMangeStudentActivity extends AppCompatActivity {
         CardView queryStudentCard = findViewById(R.id.card_query_student);
         if (queryStudentCard != null) {
             queryStudentCard.setOnClickListener(v -> {
-                Intent intent = new Intent(AdminMangeStudentActivity.this, studentinfoActivity.class);
+                Intent intent = new Intent(AdminManageStudentActivity.this, studentinfoActivity.class);
                 startActivity(intent);
             });
         }
@@ -144,7 +141,7 @@ public class AdminMangeStudentActivity extends AppCompatActivity {
         CardView batchOperationCard = findViewById(R.id.card_batch_operation);
         if (batchOperationCard != null) {
             batchOperationCard.setOnClickListener(v -> {
-                Intent intent = new Intent(AdminMangeStudentActivity.this, DataManagementActivity.class);
+                Intent intent = new Intent(AdminManageStudentActivity.this, DataManagementActivity.class);
                 startActivity(intent);
             });
         }
@@ -153,7 +150,7 @@ public class AdminMangeStudentActivity extends AppCompatActivity {
         CardView dataStatisticsCard = findViewById(R.id.card_data_statistics);
         if (dataStatisticsCard != null) {
             dataStatisticsCard.setOnClickListener(v -> {
-                Intent intent = new Intent(AdminMangeStudentActivity.this, StudentStatisticsActivity.class);
+                Intent intent = new Intent(AdminManageStudentActivity.this, StudentStatisticsActivity.class);
                 startActivity(intent);
             });
         }
@@ -166,7 +163,7 @@ public class AdminMangeStudentActivity extends AppCompatActivity {
         if (navHome != null) {
             navHome.setOnClickListener(v -> {
                 // 直接回首页，结束所有中间页面
-                Intent intent = new Intent(AdminMangeStudentActivity.this, adminActivity.class);
+                Intent intent = new Intent(AdminManageStudentActivity.this, adminActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 // 不需要手动finish，因为CLEAR_TOP会清理栈
@@ -178,7 +175,7 @@ public class AdminMangeStudentActivity extends AppCompatActivity {
         if (navManage != null) {
             navManage.setOnClickListener(v -> {
                 // 回到管理页面，结束当前学生管理页面
-                Intent intent = new Intent(AdminMangeStudentActivity.this, AdminManagementActivity.class);
+                Intent intent = new Intent(AdminManageStudentActivity.this, AdminManagementActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();

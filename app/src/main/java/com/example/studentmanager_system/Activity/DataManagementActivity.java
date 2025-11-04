@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,6 +35,16 @@ public class DataManagementActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_management);
+
+        // 注册新的返回监听器替代已弃用的onBackPressed()
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // 直接销毁当前页面，返回上一个页面
+                finish();
+            }
+        });
+
         checkDatabaseAvailability();
         initActivityResultLaunchers();
         initButtons();
@@ -81,7 +92,7 @@ public class DataManagementActivity extends AppCompatActivity {
                 }
         );
 
-        // 导入功能保持不变（仍为TXT）
+        // 修改导入功能为Excel格式
         importFileLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -111,9 +122,12 @@ public class DataManagementActivity extends AppCompatActivity {
                             return;
                         }
 
+                        // 修改文件类型检查为Excel格式
                         String fileMimeType = getContentResolver().getType(selectUri);
-                        if (fileMimeType == null || !fileMimeType.contains("text")) {
-                            Toast.makeText(this, "请选择.txt格式的文件", Toast.LENGTH_SHORT).show();
+                        if (fileMimeType == null ||
+                                (!fileMimeType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") &&
+                                        !fileMimeType.equals("application/vnd.ms-excel"))) {
+                            Toast.makeText(this, "请选择.xlsx或.xls格式的Excel文件", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -211,7 +225,7 @@ public class DataManagementActivity extends AppCompatActivity {
             }
         });
 
-        // 导入功能保持不变
+        // 修改导入按钮为Excel格式
         findViewById(R.id.import_students).setOnClickListener(v -> {
             importType = "students";
             startSelectFileFlow();
@@ -270,8 +284,8 @@ public class DataManagementActivity extends AppCompatActivity {
             }
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            // 修改为Excel的MIME类型（xlsx格式）
-            intent.setType("application/vnd.malformations-office document.spreadsheetml.sheet");
+            // 修正MIME类型为标准Excel格式
+            intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             // 文件名后缀改为.xlsx
             String defaultName = dataType + "_" + System.currentTimeMillis() + ".xlsx";
             intent.putExtra(Intent.EXTRA_TITLE, defaultName);
@@ -287,17 +301,21 @@ public class DataManagementActivity extends AppCompatActivity {
     }
 
     private void startSelectFileFlow() {
-        // 导入仍保持TXT格式
+        // 修改导入为Excel格式
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"text/plain"});
+        // 支持Excel文件格式
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  // .xlsx
+                "application/vnd.ms-excel"  // .xls
+        });
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.putExtra(Intent.EXTRA_TITLE, "选择TXT文件");
+        intent.putExtra(Intent.EXTRA_TITLE, "选择Excel文件");
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
                 | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
 
         try {
-            Intent chooserIntent = Intent.createChooser(intent, "选择TXT文件（.txt格式）");
+            Intent chooserIntent = Intent.createChooser(intent, "选择Excel文件（.xlsx或.xls格式）");
             importFileLauncher.launch(chooserIntent);
         } catch (Exception e) {
             Toast.makeText(this, "请安装文件管理器", Toast.LENGTH_SHORT).show();

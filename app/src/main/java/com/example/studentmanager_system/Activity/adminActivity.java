@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.studentmanager_system.R;
+import com.google.android.material.card.MaterialCardView;
 
 /**
  * 管理员主界面 - 根页面
@@ -28,6 +29,51 @@ public class adminActivity extends Activity {
                 Intent intent = new Intent(adminActivity.this, AdminManagementActivity.class);
                 startActivity(intent);
                 // 从首页进入管理页面，不结束首页
+            });
+        }
+
+        // 我的按钮点击事件
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 这里可以跳转到关于南京邮电大学的介绍页面
+                Intent intent = new Intent(adminActivity.this, NjuptInfoActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        // 添加学生管理和教师管理卡片的点击事件
+        setupManagementCards();
+    }
+
+    /**
+     * 设置管理卡片的点击事件
+     */
+    private void setupManagementCards() {
+        // 学生管理卡片点击事件
+        MaterialCardView cardStudentManage = findViewById(R.id.card_student_manage);
+        if (cardStudentManage != null) {
+            cardStudentManage.setOnClickListener(v -> {
+                Intent intent = new Intent(adminActivity.this, AdminManageStudentActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        // 教师管理卡片点击事件
+        MaterialCardView cardTeacherManage = findViewById(R.id.card_teacher_manage);
+        if (cardTeacherManage != null) {
+            cardTeacherManage.setOnClickListener(v -> {
+                Intent intent = new Intent(adminActivity.this, AdminManageTeacherActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        // 数据管理卡片点击事件
+        MaterialCardView cardDataManage = findViewById(R.id.card_data_manage);
+        if (cardDataManage != null) {
+            cardDataManage.setOnClickListener(v -> {
+                Intent intent = new Intent(adminActivity.this, DataManagementActivity.class);
+                startActivity(intent);
             });
         }
     }

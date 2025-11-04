@@ -3,27 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="8dp"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_teacher"
+        android:layout_marginEnd="8dp" />
 
     <TextView
-        android:id="@+id/teacher_item_id"
+        android:id="@+id/tv_teacher_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/teacher_item_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/teacher_item_subject"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="16sp" />
+        android:text="教师姓名"
+        android:textSize="16sp"
+        android:textColor="#333" />
 
 </LinearLayout>

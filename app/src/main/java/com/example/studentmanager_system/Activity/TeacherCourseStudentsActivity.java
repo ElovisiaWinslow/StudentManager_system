@@ -18,20 +18,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// TeacherCourseStudentsActivity.java
 public class TeacherCourseStudentsActivity extends AppCompatActivity {
-    private ListView courseListView;
     private myDatabaseHelper dbHelper;
+    private ListView courseListView;
+    private List<Map<String, String>> courseList;
     private String teacherId;
-    private List<Map<String, String>> courseList = new ArrayList<>(); // 存储课程信息
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.teacher_course_students_layout);
+        setContentView(R.layout.teacher_course_list_layout);
 
+        // 获取教师ID
         teacherId = getIntent().getStringExtra("teacherId");
-        dbHelper = myDatabaseHelper.getInstance(this);
+
+        dbHelper = new myDatabaseHelper(this);
+        courseList = new ArrayList<>();
+
         courseListView = findViewById(R.id.course_list_view);
 
         // 加载教师所授课程
@@ -51,7 +55,7 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
         // 查询教师教授的所有课程
         var db = dbHelper.getReadableDatabase();
         var cursor = db.rawQuery(
-                "select id, name from " + myDatabaseHelper.COURSE_TABLE + " where teacher_id=?",
+                "SELECT id, name FROM " + myDatabaseHelper.COURSE_TABLE + " WHERE teacher_id=?",
                 new String[]{teacherId}
         );
 
@@ -73,70 +77,61 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
         }
         cursor.close();
 
-        // 显示课程列表
-        SimpleAdapter adapter = new SimpleAdapter(
+        // 绑定适配器
+        SimpleAdapter courseAdapter = new SimpleAdapter(
                 this,
                 courseList,
-                android.R.layout.simple_list_item_1,
-                new String[]{"courseName"}, // 显示课程名称
-                new int[]{android.R.id.text1}
+                R.layout.course_item_layout,
+                new String[]{"courseName", "courseId"},
+                new int[]{R.id.tv_course_name, R.id.tv_course_id}
         );
-        courseListView.setAdapter(adapter);
+        courseListView.setAdapter(courseAdapter);
     }
 
-    // 展示某课程的学生名单
+    // 显示某门课程的选课学生
     private void showCourseStudents(String courseId, String courseName) {
-        // 查询选了该课程的学生ID
+        // 查询选了这门课的学生列表 - 使用正确的 student_course 表
         var db = dbHelper.getReadableDatabase();
         var cursor = db.rawQuery(
-                "select student_id from " + myDatabaseHelper.STUDENT_COURSE_TABLE + " where course_id=?",
+                "SELECT sc.student_id, s.name, s.sex, s.number " +
+                        "FROM " + myDatabaseHelper.STUDENT_COURSE_TABLE + " sc " +
+                        "JOIN " + myDatabaseHelper.STUDENT_TABLE + " s ON sc.student_id = s.id " +
+                        "WHERE sc.course_id=?",
                 new String[]{courseId}
         );
 
-        List<String> studentIds = new ArrayList<>();
+        // 根据学生ID查询学生详情
+        List<Student> students = new ArrayList<>();
         while (cursor.moveToNext()) {
-            studentIds.add(cursor.getString(cursor.getColumnIndexOrThrow("student_id")));
+            students.add(new Student(
+                    cursor.getString(0), // student_id
+                    cursor.getString(1), // name
+                    "", // password（无需展示）
+                    cursor.getString(2), // sex
+                    cursor.getString(3)  // number
+            ));
         }
         cursor.close();
 
-        if (studentIds.isEmpty()) {
+        if (students.isEmpty()) {
             Toast.makeText(this, courseName + "暂无学生选课", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // 根据学生ID查询学生详情
-        List<Student> students = new ArrayList<>();
-        for (String studentId : studentIds) {
-            var studentCursor = db.rawQuery(
-                    "select id, name, sex, number from " + myDatabaseHelper.STUDENT_TABLE + " where id=?",
-                    new String[]{studentId}
-            );
-            if (studentCursor.moveToNext()) {
-                students.add(new Student(
-                        studentCursor.getString(0), // id
-                        studentCursor.getString(1), // name
-                        "", // password（无需展示）
-                        studentCursor.getString(2), // sex
-                        studentCursor.getString(3), // number
-                        0, 0, 0 // 成绩（无需展示）
-                ));
-            }
-            studentCursor.close();
-        }
-
         // 用对话框展示学生名单
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(courseName + "的学生名单");
+        builder.setTitle(courseName + "的学生名单 (" + students.size() + "人)");
 
         // 构建学生信息字符串
         StringBuilder studentInfo = new StringBuilder();
         for (int i = 0; i < students.size(); i++) {
             Student s = students.get(i);
             studentInfo.append(i + 1)
-                    .append(". 学号：").append(s.getId())
-                    .append("，姓名：").append(s.getName())
-                    .append("，性别：").append(s.getSex())
-                    .append("，电话：").append(s.getNumber())
+                    .append(". ")
+                    .append(s.getName())
+                    .append(" (")
+                    .append(s.getNumber())
+                    .append(")")
                     .append("\n");
         }
 
@@ -144,4 +139,5 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
         builder.setPositiveButton("确定", null);
         builder.show();
     }
+
 }

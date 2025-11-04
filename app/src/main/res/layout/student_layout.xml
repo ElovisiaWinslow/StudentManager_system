@@ -1,82 +1,531 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e6e6e6"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:background="#f0f2f5">
 
-    <!-- 原有控件：tv1、tv2、pic、查询个人信息按钮、选课按钮、修改密码按钮 不变 -->
-    <TextView
-        android:id="@+id/tv1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="欢迎使用NJUPT"
-        android:textSize="25sp" />
+    <!-- 顶部标题栏 -->
+    <LinearLayout
+        android:id="@+id/top_app_bar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <TextView
-        android:id="@+id/tv2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv1"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
-        android:text="管理系统"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="NJUPT 管理系统"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
 
-    <com.example.studentmanager_system.Tools.RoundImageView
-        android:id="@+id/pic"
-        android:layout_width="50dp"
-        android:layout_height="80dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="50dp"
-        android:layout_toEndOf="@+id/tv1"
-        android:src="@drawable/student_photo" />
+        <com.example.studentmanager_system.Tools.RoundImageView
+            android:id="@+id/pic"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/student_photo" />
 
-    <Button
-        android:id="@+id/student_activity_selectInfo"
-        style="@style/common_button_style"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="70dp"
-        android:text="查询个人信息" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/student_activity_select_course"
-        style="@style/common_button_style"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/student_activity_selectInfo"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="10dp"
-        android:text="选课" />
+    <!-- 中间滑动内容区域 -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F5F5F5"
+        android:padding="16dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@+id/top_app_bar"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/student_activity_changePassword"
-        style="@style/common_button_style"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/student_activity_select_course"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="10dp"
-        android:text="修改密码" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <!-- 新增：已选课程按钮（添加在修改密码按钮下方，间距与其他按钮一致） -->
-    <Button
-        android:id="@+id/student_activity_selected_courses"
-        style="@style/common_button_style"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/student_activity_changePassword"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="10dp"
-        android:text="已选课程" />
+            <!-- 欢迎信息卡片 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@android:color/white">
 
-</RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="👋 欢迎回来"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tv_welcome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="欢迎使用NJUPT管理系统"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2196F3"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tv_student_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="学生功能面板"
+                        android:textSize="14sp"
+                        android:textColor="#666666" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 快捷操作卡片 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚡ 学生功能"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:layout_marginBottom="12dp" />
+
+                    <androidx.gridlayout.widget.GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:columnCount="2"
+                        app:rowCount="2"
+                        app:alignmentMode="alignMargins"
+                        app:columnOrderPreserved="false">
+
+                        <!-- 查询个人信息卡片 -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_select_info"
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_margin="6dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="#E8F5E9"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_student"
+                                    app:tint="#4CAF50" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="个人信息"
+                                    android:textSize="12sp"
+                                    android:textColor="#4CAF50"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="6dp"
+                                    android:gravity="center" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- 选课卡片 -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_select_course"
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_margin="6dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="#E3F2FD"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
+
+                                <!-- 使用管理员界面已有的图标资源 -->
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_teacher"
+                                    app:tint="#2196F3" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="选课系统"
+                                    android:textSize="12sp"
+                                    android:textColor="#2196F3"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="6dp" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- 修改密码卡片 -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_change_password"
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_margin="6dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="#FFF3E0"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
+
+                                <!-- 使用管理员界面已有的图标资源 -->
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_settings"
+                                    app:tint="#FF9800" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="修改密码"
+                                    android:textSize="12sp"
+                                    android:textColor="#FF9800"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="6dp"
+                                    android:gravity="center" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- 已选课程卡片 -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_selected_courses"
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_margin="6dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="#F3E5F5"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
+
+                                <!-- 使用管理员界面已有的图标资源 -->
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_data"
+                                    app:tint="#9C27B0" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="已选课程"
+                                    android:textSize="12sp"
+                                    android:textColor="#9C27B0"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="6dp"
+                                    android:gravity="center" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </androidx.gridlayout.widget.GridLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 系统信息卡片 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ℹ️ 系统信息"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:layout_marginBottom="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="学生版"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#2196F3" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="用户类型"
+                                android:textSize="12sp"
+                                android:textColor="#666666"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="40dp"
+                            android:background="#EEEEEE" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="v1.0"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#4CAF50" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="系统版本"
+                                android:textSize="12sp"
+                                android:textColor="#666666"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="40dp"
+                            android:background="#EEEEEE" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="正常"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#FF9800" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="系统状态"
+                                android:textSize="12sp"
+                                android:textColor="#666666"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- 底部导航栏 -->
+    <LinearLayout
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 首页按钮 -->
+        <LinearLayout
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_home" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="首页"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+        <!-- 管理按钮 -->
+        <LinearLayout
+            android:id="@+id/nav_manage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_manage" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="管理"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- 我的按钮 -->
+        <LinearLayout
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_profile" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我的"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

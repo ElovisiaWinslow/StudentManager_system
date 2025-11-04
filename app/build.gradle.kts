@@ -87,6 +87,8 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")  // 改为 1.9.0 版本
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     // 其他依赖保持不变...
     implementation("org.apache.poi:poi:5.2.4")
     implementation("org.apache.poi:poi-ooxml:5.2.4")

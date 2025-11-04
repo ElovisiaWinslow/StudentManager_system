@@ -17,7 +17,8 @@ import java.util.Objects;
 
 public class add_teacherinfoActivity extends Activity {
 
-    private EditText idEt, nameEt, passwordEt, sexEt, phoneEt, subjectEt;
+    private EditText idEt, nameEt, passwordEt, sexEt, phoneEt, courseEt;
+    private EditText collegeEt, departmentEt; // 新增字段控件
     private Button sureBtn;
     private myDatabaseHelper dbHelper;
     private String oldTeacherId; // 用于修改时保存原始ID
@@ -48,7 +49,10 @@ public class add_teacherinfoActivity extends Activity {
         passwordEt = findViewById(R.id.add_teacher_layout_password);
         sexEt = findViewById(R.id.add_teacher_layout_sex);
         phoneEt = findViewById(R.id.add_teacher_layout_phone);
-        subjectEt = findViewById(R.id.add_teacher_layout_subject);
+        courseEt = findViewById(R.id.add_teacher_layout_course);
+        // 初始化新增字段控件
+        collegeEt = findViewById(R.id.add_teacher_layout_college);
+        departmentEt = findViewById(R.id.add_teacher_layout_department);
         sureBtn = findViewById(R.id.add_teacher_layout_sure);
     }
 
@@ -60,7 +64,10 @@ public class add_teacherinfoActivity extends Activity {
         passwordEt.setText(intent.getStringExtra("password"));
         sexEt.setText(intent.getStringExtra("sex"));
         phoneEt.setText(intent.getStringExtra("phone"));
-        subjectEt.setText(intent.getStringExtra("subject"));
+        courseEt.setText(intent.getStringExtra("course"));
+        // 初始化新增字段的旧数据
+        collegeEt.setText(intent.getStringExtra("college"));
+        departmentEt.setText(intent.getStringExtra("department"));
     }
 
     // 保存教师信息到数据库
@@ -70,7 +77,10 @@ public class add_teacherinfoActivity extends Activity {
         String password = passwordEt.getText().toString().trim();
         String sex = sexEt.getText().toString().trim();
         String phone = phoneEt.getText().toString().trim();
-        String subject = subjectEt.getText().toString().trim();
+        String course = courseEt.getText().toString().trim();
+        // 获取新增字段的值
+        String college = collegeEt.getText().toString().trim();
+        String department = departmentEt.getText().toString().trim();
 
         // 数据验证
         if (TextUtils.isEmpty(id) || TextUtils.isEmpty(name) || TextUtils.isEmpty(password)) {
@@ -106,18 +116,21 @@ public class add_teacherinfoActivity extends Activity {
             }
             cursor.close();
 
-            // 插入新数据
+            // 插入新数据（更新SQL语句以包含新字段）
             db.execSQL("insert into " + myDatabaseHelper.TEACHER_TABLE +
-                            "(id, name, password, sex, phone, subject) values(?,?,?,?,?,?)",
-                    new String[]{id, name, password, sex, phone, subject});
-            // 4. 新增：同步添加课程到课程表（若任教科目不为空）
-            if (!TextUtils.isEmpty(subject)) {
-                // 生成课程ID（可自定义规则，例如“教师ID_科目”）
-                String courseId = id + "_" + subject.replace(" ", "");
-                // 课程名称默认使用任教科目名称
+                            "(id, name, password, sex, phone, college, department, course) values(?,?,?,?,?,?,?,?)",
+                    new String[]{id, name, password, sex, phone, college, department, course});
+
+            // 4. 新增：同步添加课程到课程表（若任教课程不为空）
+            if (!TextUtils.isEmpty(course)) {
+                // 生成课程ID（可自定义规则，例如"教师ID_课程"）
+                String courseId = id + "_" + course.replace(" ", "");
+                // 课程名称默认使用任教课程名称
                 // 课程其他字段（学分、学时可设默认值，或后续扩展为输入项）
                 double credit = 3.0; // 默认学分
                 int hours = 48;      // 默认学时
+                String classTime = ""; // 默认上课时间
+                String classLocation = ""; // 默认上课地点
 
                 // 检查课程是否已存在（避免重复添加）
                 Cursor courseCursor = db.rawQuery(
@@ -128,14 +141,17 @@ public class add_teacherinfoActivity extends Activity {
                     // 插入新课程
                     db.execSQL(
                             "insert into " + myDatabaseHelper.COURSE_TABLE +
-                                    "(id, name, teacher_id, subject, credit, hours) values(?,?,?,?,?,?)",
+                                    "(id, name, teacher_id, subject, credit, hours, class_time, class_location, average_score) values(?,?,?,?,?,?,?,?,?)",
                             new String[]{
                                     courseId,
-                                    subject,
+                                    course,
                                     id,
-                                    subject,
+                                    course,
                                     String.valueOf(credit),
-                                    String.valueOf(hours)
+                                    String.valueOf(hours),
+                                    classTime,
+                                    classLocation,
+                                    "0.0"
                             }
                     );
                 }

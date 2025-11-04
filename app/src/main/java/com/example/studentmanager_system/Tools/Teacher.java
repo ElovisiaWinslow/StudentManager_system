@@ -6,16 +6,20 @@ public class Teacher {
     private String password;
     private String gender;
     private String phone;
-    private String subject;
+    private String course;  // 修改属性名从 subject 为 course
+    private String college;     // 新增字段：所在学院
+    private String department;  // 新增字段：所在系
 
-    // 构造函数
-    public Teacher(String id, String name, String password, String gender, String phone, String subject) {
+    // 构造函数（更新以包含新字段）
+    public Teacher(String id, String name, String password, String gender, String phone, String course, String college, String department) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.gender = gender;
         this.phone = phone;
-        this.subject = subject;
+        this.course = course;
+        this.college = college;     // 初始化新增字段
+        this.department = department; // 初始化新增字段
     }
 
     // Getter和Setter方法
@@ -34,7 +38,15 @@ public class Teacher {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    public String getSubject() { return subject; }
-    public void setSubject(String subject) { this.subject = subject; }
-}
+    // 修改方法名从 getSubject 为 getCourse
+    public String getCourse() { return course; }
+    // 修改方法名从 setSubject 为 setCourse
+    public void setCourse(String course) { this.course = course; }
 
+    // 新增字段的Getter和Setter方法
+    public String getCollege() { return college; }
+    public void setCollege(String college) { this.college = college; }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+}

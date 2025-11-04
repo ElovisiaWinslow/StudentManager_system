@@ -50,6 +50,12 @@ public class student_login_activity extends Activity {
                     if (cursor.moveToNext()){
                         String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
                         if (password.equals(studentPassword)){
+                            // 保存学生ID到SharedPreferences
+                            android.content.SharedPreferences prefs = getSharedPreferences("login_info", MODE_PRIVATE);
+                            android.content.SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("student_id", studentId);
+                            editor.apply();
+
                             //启动学生登录后的界面并将学生的账户（id）传过去
                             Intent intent = new Intent(student_login_activity.this, studentActivity.class);
                             intent.putExtra("id", name.getText().toString());

@@ -106,22 +106,64 @@
         android:layout_toRightOf="@+id/teacher_id_label"
         android:inputType="phone" />
 
-    <!-- 任教科目 -->
+    <!-- 所在学院 -->
     <TextView
-        android:id="@+id/teacher_subject_label"
+        android:id="@+id/teacher_college_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/teacher_phone_label"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="25dp"
-        android:text="任教科目："
+        android:text="所在学院："
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/add_teacher_layout_subject"
+        android:id="@+id/add_teacher_layout_college"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_teacher_layout_phone"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/teacher_id_label"
+        android:hint="请输入学院名称" />
+
+    <!-- 所在系 -->
+    <TextView
+        android:id="@+id/teacher_department_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teacher_college_label"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:text="所在系："
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/add_teacher_layout_department"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_teacher_layout_college"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/teacher_id_label"
+        android:hint="请输入系名称" />
+
+    <!-- 授课课程 -->
+    <TextView
+        android:id="@+id/teacher_course_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teacher_department_label"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:text="授课课程："
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/add_teacher_layout_course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_teacher_layout_department"
         android:layout_marginRight="30dp"
         android:layout_marginTop="15dp"
         android:layout_toRightOf="@+id/teacher_id_label" />

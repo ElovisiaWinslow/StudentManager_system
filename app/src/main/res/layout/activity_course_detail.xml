@@ -1,6 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f0f2f5">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- 顶部标题栏 -->
+    <LinearLayout
+        android:id="@+id/top_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="课程详情"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+    <!-- 课程基本信息 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_course_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="课程名称"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#333" />
+
+            <TextView
+                android:id="@+id/tv_course_subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="学科: 计算机科学"
+                android:textSize="16sp"
+                android:textColor="#666"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tv_course_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="学分: 3 | 学时: 48"
+                android:textSize="16sp"
+                android:textColor="#666"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tv_course_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="时间: 周一 8:00-9:30"
+                android:textSize="16sp"
+                android:textColor="#666"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tv_course_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="地点: 教学楼A101"
+                android:textSize="16sp"
+                android:textColor="#666"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 授课教师列表 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="授课教师"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#333"
+                android:layout_marginBottom="8dp" />
+
+            <ListView
+                android:id="@+id/list_teachers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:dividerHeight="0dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 选课按钮 -->
+    <Button
+        android:id="@+id/btn_select_course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="选课"
+        android:textSize="16sp"
+        android:padding="12dp" />
+
+</LinearLayout>
