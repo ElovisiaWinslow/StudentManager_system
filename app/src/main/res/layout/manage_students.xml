@@ -198,7 +198,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="总览学生信息"
+                                    android:text="浏览学生信息"
                                     android:textSize="12sp"
                                     android:textColor="#4CAF50"
                                     android:textStyle="bold"
@@ -282,7 +282,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="导出学生名单"
+                                    android:text="浏览学生成绩"
                                     android:textSize="12sp"
                                     android:textColor="#FF9800"
                                     android:textStyle="bold"
