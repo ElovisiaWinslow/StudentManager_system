@@ -91,21 +91,32 @@ public class CourseSelectionActivity extends AppCompatActivity {
 
         CourseAdapter adapter = new CourseAdapter(this, allCourses, selectedCourseIds);
         adapter.setShowOnlyDrop(false); // 显示选课/退课按钮
+
+        // 修改选课按钮点击逻辑，改为跳转到课程详情页面
         adapter.setOnCourseSelectListener((courseId, isSelect) -> {
-            boolean success;
-            if (isSelect) {
-                // 选课
-                success = dbHelper.selectCourse(studentId, courseId, null); // 临时传入null作为teacherId
-                Toast.makeText(this, success ? "选课成功" : "选课失败，可能已选该课程", Toast.LENGTH_SHORT).show();
-            } else {
-                // 退课
-                success = dbHelper.dropCourse(studentId, courseId);
-                Toast.makeText(this, success ? "退课成功" : "退课失败", Toast.LENGTH_SHORT).show();
+            // 添加参数检查
+            if (studentId == null) {
+                Toast.makeText(this, "课程或学生信息缺失", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            if (success) {
-                // 刷新列表
-                loadAllCourses();
+            // 查找对应的课程对象
+            Course selectedCourse = null;
+            for (Course course : allCourses) {
+                if (course.getId().equals(courseId) || ("AGGREGATED_" + course.getName()).equals(courseId)) {
+                    selectedCourse = course;
+                    break;
+                }
+            }
+
+            if (selectedCourse != null) {
+                // 跳转到课程详情页面
+                Intent intent = new Intent(CourseSelectionActivity.this, CourseDetailActivity.class);
+                intent.putExtra("course", selectedCourse);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "未找到课程信息", Toast.LENGTH_SHORT).show();
             }
         });
 

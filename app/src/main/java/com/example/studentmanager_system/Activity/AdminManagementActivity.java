@@ -1,10 +1,14 @@
 package com.example.studentmanager_system.Activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import com.example.studentmanager_system.R;
+import com.example.studentmanager_system.Util.myDatabaseHelper;
 import com.google.android.material.card.MaterialCardView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,6 +40,7 @@ public class AdminManagementActivity extends AppCompatActivity {
 
     private void initViews() {
         // 初始化视图组件
+        updateStatistics();
     }
 
     private void setupClickListeners() {
@@ -93,6 +98,67 @@ public class AdminManagementActivity extends AppCompatActivity {
             });
         }
 
+        // 我的按钮点击事件
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 这里可以跳转到关于南京邮电大学的介绍页面
+                Intent intent = new Intent(AdminManagementActivity.this, NjuptInfoActivity.class);
+                startActivity(intent);
+            });
+        }
+
         // 底部导航栏 - 管理按钮（当前页面，不需要处理）
+    }
+
+    // 更新统计数据
+    private void updateStatistics() {
+        myDatabaseHelper dbHelper = myDatabaseHelper.getInstance(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // 查询学生总数
+        Cursor studentCursor = db.rawQuery("SELECT COUNT(*) FROM " + myDatabaseHelper.STUDENT_TABLE, null);
+        int studentCount = 0;
+        if (studentCursor.moveToFirst()) {
+            studentCount = studentCursor.getInt(0);
+        }
+        studentCursor.close();
+
+        // 查询教师总数
+        Cursor teacherCursor = db.rawQuery("SELECT COUNT(*) FROM " + myDatabaseHelper.TEACHER_TABLE, null);
+        int teacherCount = 0;
+        if (teacherCursor.moveToFirst()) {
+            teacherCount = teacherCursor.getInt(0);
+        }
+        teacherCursor.close();
+
+        // 查询班级数量
+        Cursor classCursor = db.rawQuery("SELECT COUNT(DISTINCT class) FROM " + myDatabaseHelper.STUDENT_TABLE, null);
+        int classCount = 0;
+        if (classCursor.moveToFirst()) {
+            classCount = classCursor.getInt(0);
+        }
+        classCursor.close();
+
+        // 更新UI显示
+        TextView studentCountText = findViewById(R.id.student_count_text);
+        TextView teacherCountText = findViewById(R.id.teacher_count_text);
+        TextView classCountText = findViewById(R.id.class_count_text);
+
+        if (studentCountText != null) {
+            studentCountText.setText(String.valueOf(studentCount));
+        }
+        if (teacherCountText != null) {
+            teacherCountText.setText(String.valueOf(teacherCount));
+        }
+        if (classCountText != null) {
+            classCountText.setText(String.valueOf(classCount));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateStatistics();
     }
 }

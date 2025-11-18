@@ -55,13 +55,14 @@ public class admin_login_activity extends Activity {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.rawQuery("select password from admin where name=?", new String[]{nameInfo});
             String pi = null;
-          if (cursor.moveToNext()){
-              pi = cursor.getString(cursor.getColumnIndexOrThrow("password"));//获取密码
-          }
+            if (cursor.moveToNext()){
+                pi = cursor.getString(cursor.getColumnIndexOrThrow("password"));//获取密码
+            }
 
-          //如果密码正确跳转到登录后的界面
+            //如果密码正确跳转到登录后的界面
             if (passwordInfo.equals(pi)){
                 Intent intent =  new Intent(admin_login_activity.this,adminActivity.class);
+                intent.putExtra("current_admin_name", nameInfo); // Pass admin name to next activity
                 startActivity(intent);
                 cursor.close();
             }else{

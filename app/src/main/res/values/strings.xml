@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StudentManager_System</string>
+    <string name="app_name">南京邮电大学学生管理系统</string>
     <string name="select_grade">请选择年级</string>
     <string name="select_class">请选择班级</string>
     <string name="select_college">请选择学院</string>

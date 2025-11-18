@@ -63,6 +63,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
                 app:cardElevation="4dp"
                 app:cardCornerRadius="12dp"
                 app:cardBackgroundColor="@android:color/white">
@@ -246,13 +247,13 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/ic_ranking"
+                                    android:src="@drawable/ic_course"
                                     app:tint="#FF9800" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="成绩排名"
+                                    android:text="课程管理"
                                     android:textSize="12sp"
                                     android:textColor="#FF9800"
                                     android:textStyle="bold"
@@ -339,7 +340,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="系统设置"
+                                    android:text="修改密码"
                                     android:textSize="12sp"
                                     android:textColor="#757575"
                                     android:textStyle="bold"
@@ -386,7 +387,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 数据统计卡片 -->
+            <!-- 校区地图卡片 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -399,112 +400,53 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 数据统计"
+                        android:text="🗺️ 校区地图"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
                         android:layout_marginBottom="12dp" />
 
-                    <LinearLayout
+                    <!-- 地图预览容器 -->
+                    <FrameLayout
+                        android:id="@+id/map_preview_container"
                         android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginBottom="8dp">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPager_maps"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                        <!-- 页面指示器 -->
+                        <LinearLayout
+                            android:id="@+id/layout_indicators"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_marginBottom="8dp"/>
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tv_map_caption"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="256"
-                                android:textSize="24sp"
-                                android:textStyle="bold"
-                                android:textColor="#2196F3" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="学生总数"
-                                android:textSize="12sp"
-                                android:textColor="#666666"
-                                android:layout_marginTop="4dp" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="40dp"
-                            android:background="#EEEEEE" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="32"
-                                android:textSize="24sp"
-                                android:textStyle="bold"
-                                android:textColor="#4CAF50" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="教师总数"
-                                android:textSize="12sp"
-                                android:textColor="#666666"
-                                android:layout_marginTop="4dp" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="40dp"
-                            android:background="#EEEEEE" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="98%"
-                                android:textSize="24sp"
-                                android:textStyle="bold"
-                                android:textColor="#FF9800" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="系统正常"
-                                android:textSize="12sp"
-                                android:textColor="#666666"
-                                android:layout_marginTop="4dp" />
-
-                        </LinearLayout>
-                    </LinearLayout>
+                        android:text="南京邮电大学仙林校区"
+                        android:textSize="14sp"
+                        android:textColor="#666666"
+                        android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

@@ -180,6 +180,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     // 检查学生是否已选该课程（利用表的unique约束）
     public boolean isCourseSelected(String studentId, String courseId) {
+        // 添加参数校验
+        if (studentId == null || courseId == null) {
+            return false;
+        }
+
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(STUDENT_COURSE_TABLE, null,
                 "student_id=? AND course_id=?",
@@ -192,6 +197,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     // 检查学生是否已选同一门课程的任何实例
     public boolean isCourseNameSelected(String studentId, String courseName) {
+        // 添加参数校验
+        if (studentId == null || courseName == null) {
+            return false;
+        }
+
         SQLiteDatabase db = getReadableDatabase();
         String sql = "SELECT COUNT(*) FROM " + STUDENT_COURSE_TABLE + " sc " +
                 "JOIN " + COURSE_TABLE + " c ON sc.course_id = c.id " +
@@ -209,13 +219,18 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     // 获取学生已选课程详情（包含成绩）
     @SuppressLint("Range")
     public List<Course> getSelectedCourses(String studentId) {
+        // 添加参数校验
+        if (studentId == null) {
+            return new ArrayList<>();
+        }
+
         List<Course> courses = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
 
         String sql = "SELECT c.*, t.name as teacher_name, sc.score as score, sc.teacher_id as selected_teacher_id " +
                 "FROM " + STUDENT_COURSE_TABLE + " sc " +
                 "JOIN " + COURSE_TABLE + " c ON sc.course_id = c.id " +
-                "LEFT JOIN " + TEACHER_TABLE + " t ON sc.teacher_id = t.id " +
+                "LEFT JOIN " + TEACHER_TABLE + " t ON c.teacher_id = t.id " +  // 修改此处连接条件
                 "WHERE sc.student_id = ?";
 
         Cursor cursor = db.rawQuery(sql, new String[]{studentId});
@@ -243,6 +258,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     // 获取学生已选课程ID列表
     public List<String> getSelectedCourseIds(String studentId) {
+        // 添加参数校验
+        if (studentId == null) {
+            return new ArrayList<>();
+        }
+
         List<String> courseIds = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(
@@ -258,6 +278,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     // 选课：插入选课记录
     public boolean selectCourse(String studentId, String courseId, String teacherId) {
+        // 添加参数校验
+        if (studentId == null || courseId == null) {
+            return false;
+        }
+
         // 检查是否已选该课程的任何实例
         String courseName = getCourseNameById(courseId);
         if (courseName != null && isCourseNameSelected(studentId, courseName)) {
@@ -276,6 +301,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     // 根据课程ID获取课程名称
     public String getCourseNameById(String courseId) {
+        // 添加参数校验
+        if (courseId == null) {
+            return null;
+        }
+
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(COURSE_TABLE, new String[]{"name"},
                 "id=?", new String[]{courseId}, null, null, null);
@@ -290,6 +320,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     // 退课：删除选课记录
     public boolean dropCourse(String studentId, String courseId) {
+        // 添加参数校验
+        if (studentId == null || courseId == null) {
+            return false;
+        }
+
         SQLiteDatabase db = getWritableDatabase();
         int rowsDeleted = db.delete(
                 STUDENT_COURSE_TABLE,
@@ -344,6 +379,8 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
                 Course aggregatedCourse = new Course();
                 aggregatedCourse.setName(courseName);
                 aggregatedCourse.setCourseInstances(courseInstances);
+                // 使用特殊标识符表明这是聚合课程
+                aggregatedCourse.setId("AGGREGATED_" + courseName);
                 // 使用第一个实例的基本信息作为聚合课程的信息
                 Course firstInstance = courseInstances.get(0);
                 aggregatedCourse.setCredit(firstInstance.getCredit());
@@ -359,6 +396,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     // 根据课程名称获取所有教授该课程的教师
     @SuppressLint("Range")
     private List<String> getTeachersForCourse(SQLiteDatabase db, String courseName) {
+        // 添加参数校验
+        if (courseName == null) {
+            return new ArrayList<>();
+        }
+
         List<String> teacherNames = new ArrayList<>();
         Cursor teacherCursor = db.query(TEACHER_TABLE, new String[]{"name"},
                 "course=?", new String[]{courseName}, null, null, null);
@@ -371,6 +413,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     // 计算并更新课程平均成绩
     public boolean updateCourseAverageScore(String courseId) {
+        // 添加参数校验
+        if (courseId == null) {
+            return false;
+        }
+
         SQLiteDatabase db = getReadableDatabase();
 
         // 计算该课程的平均成绩
@@ -404,6 +451,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     // 根据课程ID获取课程详细信息（包括所有教师信息）
     @SuppressLint("Range")
     public List<Course> getCourseDetailsByName(String courseName) {
+        // 添加参数校验
+        if (courseName == null) {
+            return new ArrayList<>();
+        }
+
         List<Course> courses = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
 

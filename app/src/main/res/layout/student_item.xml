@@ -1,33 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_marginTop="10dp">
-    <!--listView的布局-->
+    android:padding="8dp"
+    android:gravity="center_vertical">
 
+    <!-- 学生头像 -->
     <ImageView
         android:id="@+id/student_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="学生头像" />
 
-    <TextView
-        android:id="@+id/student_name"
-        android:layout_width="wrap_content"
+    <!-- 姓名和学号信息 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:textSize="20sp" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/student_id"
-        android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:textSize="20sp" />
+        <!-- 姓名 -->
+        <TextView
+            android:id="@+id/student_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:textSize="16sp"
+            android:textColor="#333"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center" />
 
+        <!-- 学号 -->
+        <TextView
+            android:id="@+id/student_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="#333"
+            android:singleLine="true"
+            android:gravity="center" />
 
+    </LinearLayout>
 
 </LinearLayout>

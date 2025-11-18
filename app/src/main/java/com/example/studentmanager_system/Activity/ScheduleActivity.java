@@ -25,7 +25,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private List<Course> selectedCourses;
 
     // 用于存储每个时间段的课程
-    private Map<String, List<Course>> scheduleMap = new HashMap<>();
+    private final Map<String, List<Course>> scheduleMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,9 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     private void displaySchedule() {
+        // 检查并显示课程冲突警告
+        checkAndShowConflictWarning();
+
         // 遍历所有时间段并显示课程
         for (Map.Entry<String, List<Course>> entry : scheduleMap.entrySet()) {
             String timeSlot = entry.getKey();
@@ -216,5 +219,31 @@ public class ScheduleActivity extends AppCompatActivity {
         builder.setView(layout);
         builder.setPositiveButton("确定", null);
         builder.show();
+    }
+
+    /**
+     * 检查是否存在课程时间冲突
+     * @return true表示存在冲突，false表示无冲突
+     */
+    private boolean checkCourseConflicts() {
+        // 检查scheduleMap中是否有时间段包含多于一门课程
+        for (List<Course> courses : scheduleMap.values()) {
+            if (courses.size() > 1) {
+                return true; // 发现冲突
+            }
+        }
+        return false; // 无冲突
+    }
+
+    /**
+     * 检查并显示课程冲突警告
+     */
+    private void checkAndShowConflictWarning() {
+        LinearLayout conflictWarningLayout = findViewById(R.id.conflict_warning_layout);
+        if (checkCourseConflicts()) {
+            conflictWarningLayout.setVisibility(View.VISIBLE);
+        } else {
+            conflictWarningLayout.setVisibility(View.GONE);
+        }
     }
 }

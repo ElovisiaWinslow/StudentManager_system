@@ -203,6 +203,9 @@ public class courseinfoActivity extends AppCompatActivity {
             }
         });
 
+        // 添加"年级"后缀
+        sortedGrades.replaceAll(s -> s + "年级");
+
         gradeList.addAll(sortedGrades);
     }
 
@@ -233,7 +236,9 @@ public class courseinfoActivity extends AppCompatActivity {
             // 否则使用原有的筛选条件
             if (!selectedGrade.isEmpty()) {
                 conditions.add("grade = ?");
-                args.add(selectedGrade);
+                // 去掉"年级"后缀，只保留数字进行查询
+                String gradeNumber = selectedGrade.replace("年级", "");
+                args.add(gradeNumber);
             }
         }
 

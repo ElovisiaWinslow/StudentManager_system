@@ -4,12 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import com.example.studentmanager_system.R;
 import com.example.studentmanager_system.Util.myDatabaseHelper;
 
@@ -19,13 +15,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // 保留：确保布局延伸+消除黑边（兼容定制系统）
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        );
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
         setContentView(R.layout.activity_main);
 
@@ -46,24 +35,6 @@ public class MainActivity extends Activity {
         studentContainer.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, student_login_activity.class))
         );
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // 保留：切回界面时重新隐藏系统栏（防止意外显示）
-        hideSystemBars();
-    }
-
-    private void hideSystemBars() {
-        View decorView = getWindow().getDecorView();
-        WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(
-                getWindow(), decorView
-        );
-        controller.setSystemBarsBehavior(
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        );
-        controller.hide(WindowInsetsCompat.Type.systemBars());
     }
 
     // 双击返回退出逻辑

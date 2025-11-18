@@ -139,9 +139,10 @@ public class add_studentinfoActivity extends Activity {
         String oldPassword = oldData.getStringExtra("password");
         password.setText(oldPassword);
         // 恢复新增字段的值
-        String oldGrade = oldData.getStringExtra("grade");
-        if (oldGrade != null) grade.setText(oldGrade);
-        String oldClass = oldData.getStringExtra("class");
+        int oldGrade = oldData.getIntExtra("grade", -1);
+        if (oldGrade != -1) grade.setText(String.valueOf(oldGrade));
+        // 修复字段名不匹配问题：将"class"改为"clazz"
+        String oldClass = oldData.getStringExtra("clazz");
         if (oldClass != null) class_.setText(oldClass);
     }
 }

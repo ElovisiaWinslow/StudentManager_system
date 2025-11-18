@@ -147,18 +147,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="课程名称"
+                    android:text="课程概览"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="课程ID"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
 
             </LinearLayout>
 

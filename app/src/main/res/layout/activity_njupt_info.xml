@@ -63,13 +63,14 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
                 app:cardElevation="4dp"
                 app:cardCornerRadius="12dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="250dp"
                     android:orientation="vertical"
                     android:padding="20dp">
 
@@ -77,9 +78,9 @@
                         android:id="@+id/iv_njupt_photo"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
+                        android:layout_marginBottom="12dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/njupt_photo"
-                        android:layout_marginBottom="12dp" />
+                        android:src="@drawable/njupt_photo" />
 
                 </LinearLayout>
 

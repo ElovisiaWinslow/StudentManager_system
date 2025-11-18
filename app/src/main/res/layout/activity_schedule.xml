@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#f0f2f5">
 
+    <!-- 顶部标题栏 -->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
@@ -15,6 +17,34 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@android:color/black" />
+
+    <!-- 冲突提示区域 -->
+    <LinearLayout
+        android:id="@+id/conflict_warning_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFF3E0"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_warning"
+            android:layout_gravity="center_vertical"
+            app:tint="#FF9800" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="检测到课程时间冲突，请注意查看详细信息"
+            android:textSize="12sp"
+            android:textColor="#FF9800"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
 
     <!-- 星期标题 -->
     <LinearLayout
@@ -75,7 +105,8 @@
     <!-- 课程表主体 -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:padding="8dp">
 
         <LinearLayout
@@ -93,9 +124,10 @@
                 <TextView
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
-                    android:text="1-2节"
+                    android:text="1-2节\n8:00\n~\n9:35"
                     android:gravity="center"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="10sp" />
 
                 <LinearLayout
                     android:id="@+id/monday_1_2"
@@ -158,9 +190,10 @@
                 <TextView
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
-                    android:text="3-4节"
+                    android:text="3-4节\n9:50\n~\n11:25"
                     android:gravity="center"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="10sp" />
 
                 <LinearLayout
                     android:id="@+id/monday_3_4"
@@ -223,9 +256,10 @@
                 <TextView
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
-                    android:text="5-6节"
+                    android:text="5-6节\n13:45\n~\n15:20"
                     android:gravity="center"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="10sp" />
 
                 <LinearLayout
                     android:id="@+id/monday_5_6"
@@ -287,9 +321,10 @@
                 <TextView
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
-                    android:text="7-8节"
+                    android:text="7-8节\n15:35\n~\n17:10"
                     android:gravity="center"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="10sp" />
 
                 <LinearLayout
                     android:id="@+id/monday_7_8"
@@ -343,4 +378,95 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <!-- 底部导航栏 -->
+    <LinearLayout
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal">
+
+        <!-- 首页按钮 -->
+        <LinearLayout
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_home" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="首页"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+        <!-- 管理按钮 -->
+        <LinearLayout
+            android:id="@+id/nav_manage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_manage" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="管理"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- 我的按钮 -->
+        <LinearLayout
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_profile" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我的"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>
