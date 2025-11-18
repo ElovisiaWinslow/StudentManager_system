@@ -34,8 +34,6 @@ public class StudentManagementActivity extends AppCompatActivity {
     }
     // 添加到 StudentManagementActivity 类中
     private String getCurrentStudentId() {
-        // 这里需要根据你的实际实现获取当前登录学生ID
-        // 示例：从 SharedPreferences 中获取
         android.content.SharedPreferences prefs = getSharedPreferences("login_info", MODE_PRIVATE);
         return prefs.getString("student_id", null);
     }
@@ -46,7 +44,9 @@ public class StudentManagementActivity extends AppCompatActivity {
         if (selectInfoCard != null) {
             selectInfoCard.setOnClickListener(v -> {
                 // 进入查询个人信息功能
-                // TODO: 实现跳转到查询个人信息页面的逻辑
+                Intent intent = new Intent(StudentManagementActivity.this, ScheduleActivity.class);
+                intent.putExtra("studentId", getCurrentStudentId());
+                startActivity(intent);
             });
         }
 

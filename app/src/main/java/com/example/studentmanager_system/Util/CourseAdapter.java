@@ -1,37 +1,50 @@
 // app/src/main/java/com/example/studentmanager_system/Util/CourseAdapter.java
 package com.example.studentmanager_system.Util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.example.studentmanager_system.R;
 import com.example.studentmanager_system.Tools.Course;
+
 import java.util.List;
+import java.util.Objects;
 
 public class CourseAdapter extends BaseAdapter {
-    private final Context context;
-    private final List<Course> courseList;
-    private final List<String> selectedCourseIds;
+    private Context context;
+    private List<Course> courses;
+    private List<String> selectedCourseIds;
+    private OnCourseSelectListener selectListener;
+    private OnItemClickListener itemClickListener;
+    private boolean showOnlyDrop = false; // 默认显示选课/退课按钮
+    private boolean courseInfoMode = false; // 课程信息展示模式
 
-    // 定义选课状态监听器
-    public interface OnCourseSelectListener {
-        void onSelect(String courseId, boolean isSelect); // true为选课，false为退课
+    public CourseAdapter(Context context, List<Course> courses, List<String> selectedCourseIds) {
+        this.context = context;
+        this.courses = courses;
+        this.selectedCourseIds = selectedCourseIds;
     }
 
-    // 定义课程项点击监听器
+    public void setShowOnlyDrop(boolean showOnlyDrop) {
+        this.showOnlyDrop = showOnlyDrop;
+    }
+
+    public void setCourseInfoMode(boolean courseInfoMode) {
+        this.courseInfoMode = courseInfoMode;
+    }
+
+    public interface OnCourseSelectListener {
+        void onCourseSelect(String courseId, boolean isSelect);
+    }
+
     public interface OnItemClickListener {
         void onItemClick(Course course);
     }
-
-    private OnCourseSelectListener selectListener;
-    private OnItemClickListener itemClickListener;
-    private boolean showOnlyDrop = false; // 是否只显示退课按钮
 
     public void setOnCourseSelectListener(OnCourseSelectListener listener) {
         this.selectListener = listener;
@@ -41,26 +54,14 @@ public class CourseAdapter extends BaseAdapter {
         this.itemClickListener = listener;
     }
 
-    public void setShowOnlyDrop(boolean showOnlyDrop) {
-        this.showOnlyDrop = showOnlyDrop;
-    }
-
-    // 构造方法
-    public CourseAdapter(Context context, List<Course> courseList,
-                         List<String> selectedCourseIds) {
-        this.context = context;
-        this.courseList = courseList;
-        this.selectedCourseIds = selectedCourseIds;
-    }
-
     @Override
     public int getCount() {
-        return courseList.size();
+        return courses.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return courseList.get(position);
+        return courses.get(position);
     }
 
     @Override
@@ -68,104 +69,137 @@ public class CourseAdapter extends BaseAdapter {
         return position;
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.course_item, parent, false);
+            // 根据模式选择不同的布局文件
+            int layoutResource = courseInfoMode ? R.layout.course_show_item : R.layout.course_item;
+            convertView = LayoutInflater.from(context).inflate(layoutResource, parent, false);
             holder = new ViewHolder();
-            holder.tvCourseName = convertView.findViewById(R.id.tv_course_name);
-            holder.tvCourseSubject = convertView.findViewById(R.id.tv_course_subject);
-            holder.tvCourseTeacher = convertView.findViewById(R.id.tv_course_teacher);
-            holder.tvCourseInfo = convertView.findViewById(R.id.tv_course_info);
-            holder.tvCourseTime = convertView.findViewById(R.id.tv_course_time);
-            holder.tvCourseLocation = convertView.findViewById(R.id.tv_course_location);
-            holder.tvCourseScore = convertView.findViewById(R.id.tv_course_score); // 添加成绩显示 TextView
-            holder.btnSelectCourse = convertView.findViewById(R.id.btn_select_course);
+
+            // 查找通用控件
+            holder.courseName = convertView.findViewById(R.id.tv_course_name);
+            holder.courseSubject = convertView.findViewById(R.id.tv_course_subject);
+            holder.courseInfo = convertView.findViewById(R.id.tv_course_info);
+
+            // 根据不同布局查找特定控件
+            if (courseInfoMode) {
+                holder.courseTime = convertView.findViewById(R.id.tv_course_time);
+                holder.courseLocation = convertView.findViewById(R.id.tv_course_location);
+            } else {
+                holder.btnSelect = convertView.findViewById(R.id.btn_select_course);
+            }
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Course course = courseList.get(position);
-        holder.tvCourseName.setText(course.getName());
-        holder.tvCourseSubject.setText("学科: " + course.getSubject());
+        Course course = courses.get(position);
 
-        // 显示教师信息
-        String teacherInfo;
-        if (course.getTeacherNames() != null && !course.getTeacherNames().isEmpty()) {
-            teacherInfo = "授课教师: " + TextUtils.join(", ", course.getTeacherNames());
-        } else if (course.getTeacherName() != null) {
-            teacherInfo = "授课教师: " + course.getTeacherName();
-        } else {
-            teacherInfo = "授课教师: 未知";
-        }
-        holder.tvCourseTeacher.setText(teacherInfo);
-
-        holder.tvCourseInfo.setText("学分: " + course.getCredit() + " | 学时: " + course.getHours());
-        holder.tvCourseTime.setText("时间: " + (course.getClassTime() != null ?
-                course.getClassTime() : "待定"));
-        holder.tvCourseLocation.setText("地点: " + (course.getClassLocation() != null ?
-                course.getClassLocation() : "待定"));
-
-        // 显示成绩信息
-        if (course.getScore() >= 0) {
-            holder.tvCourseScore.setText("成绩: " + course.getScore());
-        } else {
-            holder.tvCourseScore.setText("成绩: 未知");
+        // 设置通用信息
+        holder.courseName.setText(course.getName());
+        if (holder.courseSubject != null) {
+            holder.courseSubject.setText("学科: " + course.getSubject());
         }
 
-        // 关键修改：先判断是否为"仅显示退课"模式（已选课程列表）
-        boolean isSelected = selectedCourseIds.contains(course.getId());
-        if (showOnlyDrop) {
-            // 已选课程列表：强制显示"退课"按钮，且按钮可点击
-            holder.btnSelectCourse.setText("退课");
-            holder.btnSelectCourse.setEnabled(true);
-            holder.btnSelectCourse.setBackgroundColor(
-                    androidx.core.content.ContextCompat.getColor(context, android.R.color.holo_red_light)); // 红色区分退课
+        // 根据模式设置不同信息
+        if (courseInfoMode) {
+            holder.courseInfo.setText(String.format("学分:%.1f 学时:%d", course.getCredit(), course.getHours()));
+            if (holder.courseTime != null) {
+                holder.courseTime.setText("时间: " + (course.getClassTime() != null ? course.getClassTime() : "未安排"));
+            }
+            if (holder.courseLocation != null) {
+                holder.courseLocation.setText("地点: " + (course.getClassLocation() != null ? course.getClassLocation() : "未安排"));
+            }
         } else {
-            // 普通选课列表：按原逻辑显示"选课"/"已选"
-            if (isSelected) {
-                holder.btnSelectCourse.setText("已选");
-                holder.btnSelectCourse.setEnabled(false);
-                holder.btnSelectCourse.setBackgroundColor(
-                        androidx.core.content.ContextCompat.getColor(context, android.R.color.darker_gray));
-            } else {
-                holder.btnSelectCourse.setText("选课");
-                holder.btnSelectCourse.setEnabled(true);
-                holder.btnSelectCourse.setBackgroundColor(
-                        androidx.core.content.ContextCompat.getColor(context, android.R.color.holo_blue_light));
+            holder.courseInfo.setText(String.format("学分:%.1f 学时:%d", course.getCredit(), course.getHours()));
+
+            // 只在非课程信息展示模式下处理按钮逻辑
+            if (holder.btnSelect != null) {
+                // 设置按钮状态
+                String courseId = course.getId();
+                boolean isSelected = selectedCourseIds.contains(courseId);
+
+                if (showOnlyDrop && isSelected) {
+                    // 只显示退课按钮模式（已选课程）
+                    holder.btnSelect.setText("退课");
+                    holder.btnSelect.setVisibility(View.VISIBLE);
+                    holder.btnSelect.setOnClickListener(v -> {
+                        if (selectListener != null) {
+                            selectListener.onCourseSelect(courseId, false); // false表示退课
+                        }
+                    });
+                } else if (!showOnlyDrop) {
+                    // 正常模式（显示选课/退课按钮）
+                    if (isSelected) {
+                        holder.btnSelect.setText("已选");
+                        holder.btnSelect.setEnabled(false);
+                    } else if (isSameCourseSelected(course)) {
+                        // 检查是否选择了同一课程的其他实例
+                        holder.btnSelect.setText("已选其他教师");
+                        holder.btnSelect.setEnabled(false);
+                    } else {
+                        holder.btnSelect.setText("选课");
+                        holder.btnSelect.setEnabled(true);
+                        holder.btnSelect.setOnClickListener(v -> {
+                            if (selectListener != null) {
+                                selectListener.onCourseSelect(courseId, true); // true表示选课
+                            }
+                        });
+                    }
+                    holder.btnSelect.setVisibility(View.VISIBLE);
+                } else {
+                    // 不显示按钮
+                    holder.btnSelect.setVisibility(View.GONE);
+                }
             }
         }
 
-        holder.btnSelectCourse.setOnClickListener(v -> {
-            if (selectListener != null) {
-                // 逻辑判断：showOnlyDrop=true时为退课（isSelect=false），否则为选课（isSelect=!isSelected）
-                boolean isSelectOperation = !showOnlyDrop && !isSelected;
-                selectListener.onSelect(course.getId(), isSelectOperation);
-            }
-        });
-
-        // 设置整个课程项的点击事件
-        convertView.setOnClickListener(v -> {
-            if (itemClickListener != null) {
-                itemClickListener.onItemClick(course);
-            }
-        });
+        // 设置整个课程项的点击事件 - 关键修改
+        if (courseInfoMode) {
+            // 课程信息模式下，不设置点击事件，让父级ListView处理
+            convertView.setOnClickListener(null);
+            convertView.setClickable(false);
+        } else {
+            // 非课程信息模式下，设置点击事件
+            convertView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(course);
+                }
+            });
+        }
 
         return convertView;
     }
 
-    // 视图持有者
+    /**
+     * 检查是否已经选择了同一课程名的其他课程实例
+     * @param currentCourse 当前课程
+     * @return 是否已选同一课程的其他实例
+     */
+    private boolean isSameCourseSelected(Course currentCourse) {
+        // 遍历所有已选课程ID
+        for (String selectedId : selectedCourseIds) {
+            // 在所有课程中查找已选课程
+            for (Course course : courses) {
+                // 使用 Objects.equals() 避免 NullPointerException
+                if (Objects.equals(course.getId(), selectedId) &&
+                        Objects.equals(course.getName(), currentCourse.getName()) &&
+                        !Objects.equals(course.getId(), currentCourse.getId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     static class ViewHolder {
-        TextView tvCourseName;
-        TextView tvCourseSubject;
-        TextView tvCourseTeacher;
-        TextView tvCourseInfo;
-        TextView tvCourseTime;
-        TextView tvCourseLocation;
-        TextView tvCourseScore; // 添加成绩显示 TextView
-        Button btnSelectCourse;
+        TextView courseName;
+        TextView courseSubject;
+        TextView courseInfo;
+        TextView courseTime;
+        TextView courseLocation;
+        Button btnSelect;
     }
 }

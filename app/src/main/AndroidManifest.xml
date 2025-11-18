@@ -45,12 +45,15 @@
         <activity android:name=".Activity.CourseDetailActivity" />
         <activity android:name=".Activity.teacherinfoActivity" />
         <activity android:name=".Activity.studentinfoActivity" />
-
+        <activity android:name=".Activity.courseinfoActivity" />
+        <activity android:name=".Activity.updateCourseActivity" />
         <activity android:name=".Activity.add_studentinfoActivity" />
         <activity android:name=".Activity.add_teacherinfoActivity" />
         <activity android:name=".Activity.DataManagementActivity" />
         <activity android:name=".Activity.CourseListActivity" />
         <activity android:name=".Activity.SelectedCoursesActivity" />
+
+        <activity android:name=".Activity.ScheduleActivity" />
 
     </application>
 

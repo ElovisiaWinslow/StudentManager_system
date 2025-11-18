@@ -95,7 +95,7 @@ public class CourseSelectionActivity extends AppCompatActivity {
             boolean success;
             if (isSelect) {
                 // 选课
-                success = dbHelper.selectCourse(studentId, courseId);
+                success = dbHelper.selectCourse(studentId, courseId, null); // 临时传入null作为teacherId
                 Toast.makeText(this, success ? "选课成功" : "选课失败，可能已选该课程", Toast.LENGTH_SHORT).show();
             } else {
                 // 退课

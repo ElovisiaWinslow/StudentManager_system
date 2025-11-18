@@ -3,9 +3,10 @@ package com.example.studentmanager_system.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
@@ -20,6 +21,8 @@ public class CourseDetailActivity extends AppCompatActivity {
     private String studentId;
     private myDatabaseHelper dbHelper;
     private Button btnSelectCourse;
+    private RadioGroup teacherRadioGroup;
+    private List<Course> courseInstances;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,31 +67,33 @@ public class CourseDetailActivity extends AppCompatActivity {
         TextView tvCourseName = findViewById(R.id.tv_course_name);
         TextView tvCourseSubject = findViewById(R.id.tv_course_subject);
         TextView tvCourseInfo = findViewById(R.id.tv_course_info);
-        TextView tvCourseTime = findViewById(R.id.tv_course_time);
-        TextView tvCourseLocation = findViewById(R.id.tv_course_location);
 
         tvCourseName.setText(course.getName());
         tvCourseSubject.setText("学科: " + course.getSubject());
         tvCourseInfo.setText("学分: " + course.getCredit() + " | 学时: " + course.getHours());
-        tvCourseTime.setText("时间: " + (course.getClassTime() != null ?
-                course.getClassTime() : "待定"));
-        tvCourseLocation.setText("地点: " + (course.getClassLocation() != null ?
-                course.getClassLocation() : "待定"));
 
-        // 设置教师列表
-        ListView listTeachers = findViewById(R.id.list_teachers);
-        List<String> teacherNames = course.getTeacherNames();
-        if (teacherNames != null && !teacherNames.isEmpty()) {
-            ArrayAdapter<String> teacherAdapter = new ArrayAdapter<>(
-                    this, R.layout.teacher_item, R.id.tv_teacher_name, teacherNames);
-            listTeachers.setAdapter(teacherAdapter);
-        } else {
-            // 如果没有教师列表，显示默认教师姓名
-            String[] defaultTeacher = {course.getTeacherName() != null ?
-                    course.getTeacherName() : "未知教师"};
-            ArrayAdapter<String> teacherAdapter = new ArrayAdapter<>(
-                    this, R.layout.teacher_item, R.id.tv_teacher_name, defaultTeacher);
-            listTeachers.setAdapter(teacherAdapter);
+        // 获取课程详细信息（包括所有教师）
+        courseInstances = dbHelper.getCourseDetailsByName(course.getName());
+
+        // 设置教师选择列表
+        teacherRadioGroup = findViewById(R.id.teacher_radio_group);
+        teacherRadioGroup.removeAllViews();
+
+        for (int i = 0; i < courseInstances.size(); i++) {
+            Course instance = courseInstances.get(i);
+            RadioButton radioButton = new RadioButton(this);
+            radioButton.setId(View.generateViewId());
+            radioButton.setText(String.format("%s - 时间:%s 地点:%s",
+                    instance.getTeacherName(),
+                    instance.getClassTime() != null ? instance.getClassTime() : "待定",
+                    instance.getClassLocation() != null ? instance.getClassLocation() : "待定"));
+            radioButton.setTag(instance.getId()); // 用tag存储课程ID
+            teacherRadioGroup.addView(radioButton);
+
+            // 默认选中第一个
+            if (i == 0) {
+                radioButton.setChecked(true);
+            }
         }
 
         // 设置选课按钮
@@ -97,34 +102,49 @@ public class CourseDetailActivity extends AppCompatActivity {
     }
 
     private void updateSelectButtonState() {
-        boolean isSelected = dbHelper.isCourseSelected(studentId, course.getId());
-        if (isSelected) {
-            btnSelectCourse.setText("退课");
-            btnSelectCourse.setBackgroundColor(
-                    androidx.core.content.ContextCompat.getColor(this, android.R.color.holo_red_light));
+        // 检查是否已经选择了同一门课程的任何实例
+        if (dbHelper.isCourseNameSelected(studentId, course.getName())) {
+            btnSelectCourse.setText("已选课");
+            btnSelectCourse.setEnabled(false);
         } else {
             btnSelectCourse.setText("选课");
-            btnSelectCourse.setBackgroundColor(
-                    androidx.core.content.ContextCompat.getColor(this, android.R.color.holo_blue_light));
+            btnSelectCourse.setEnabled(true);
         }
     }
 
     private void handleCourseSelection() {
-        boolean isSelected = dbHelper.isCourseSelected(studentId, course.getId());
-        boolean success;
-
-        if (isSelected) {
-            // 退课
-            success = dbHelper.dropCourse(studentId, course.getId());
-            Toast.makeText(this, success ? "退课成功" : "退课失败", Toast.LENGTH_SHORT).show();
-        } else {
-            // 选课
-            success = dbHelper.selectCourse(studentId, course.getId());
-            Toast.makeText(this, success ? "选课成功" : "选课失败，可能已选该课程", Toast.LENGTH_SHORT).show();
+        // 再次检查是否已经选择了同一门课程的任何实例
+        if (dbHelper.isCourseNameSelected(studentId, course.getName())) {
+            Toast.makeText(this, "您已选择该课程，无法再次选择", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        // 获取选中的教师
+        int selectedRadioButtonId = teacherRadioGroup.getCheckedRadioButtonId();
+        if (selectedRadioButtonId == -1) {
+            Toast.makeText(this, "请选择授课教师", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        View selectedRadioButton = teacherRadioGroup.findViewById(selectedRadioButtonId);
+        String selectedCourseId = (String) selectedRadioButton.getTag();
+
+        // 选课
+        boolean success = dbHelper.selectCourse(studentId, selectedCourseId,
+                getTeacherIdByCourseId(selectedCourseId));
+        Toast.makeText(this, success ? "选课成功" : "选课失败，可能已选该课程", Toast.LENGTH_SHORT).show();
 
         if (success) {
             updateSelectButtonState();
         }
+    }
+
+    private String getTeacherIdByCourseId(String courseId) {
+        for (Course instance : courseInstances) {
+            if (instance.getId().equals(courseId)) {
+                return instance.getTeacherId();
+            }
+        }
+        return null;
     }
 }

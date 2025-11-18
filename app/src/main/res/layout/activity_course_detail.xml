@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -34,8 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="2dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,36 +70,17 @@
                 android:textColor="#666"
                 android:layout_marginTop="4dp" />
 
-            <TextView
-                android:id="@+id/tv_course_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="时间: 周一 8:00-9:30"
-                android:textSize="16sp"
-                android:textColor="#666"
-                android:layout_marginTop="4dp" />
-
-            <TextView
-                android:id="@+id/tv_course_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="地点: 教学楼A101"
-                android:textSize="16sp"
-                android:textColor="#666"
-                android:layout_marginTop="4dp" />
-
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- 授课教师列表 -->
+    <!-- 授课教师选择 -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="2dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -110,18 +91,18 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="授课教师"
+                android:text="授课教师选择"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#333"
                 android:layout_marginBottom="8dp" />
 
-            <ListView
-                android:id="@+id/list_teachers"
+            <RadioGroup
+                android:id="@+id/teacher_radio_group"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null"
-                android:dividerHeight="0dp" />
+                android:layout_height="wrap_content">
+                <!-- 教师选项将在此动态添加 -->
+            </RadioGroup>
 
         </LinearLayout>
 

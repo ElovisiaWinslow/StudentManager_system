@@ -48,7 +48,7 @@ public class CourseListActivity extends AppCompatActivity {
         adapter.setOnCourseSelectListener((courseId, isSelect) -> {
             if (isSelect) {
                 // 选课：插入student_course表
-                boolean success = dbHelper.selectCourse(studentId, courseId);
+                boolean success = dbHelper.selectCourse(studentId, courseId, null); // 临时传入null作为teacherId
                 Toast.makeText(this, success ? "选课成功" : "选课失败", Toast.LENGTH_SHORT).show();
             } else {
                 // 退课：删除student_course表记录

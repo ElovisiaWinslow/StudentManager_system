@@ -59,6 +59,28 @@ public class AdminManagementActivity extends AppCompatActivity {
             });
         }
 
+        // 浏览课程卡片点击事件
+        MaterialCardView browseCourseCard = findViewById(R.id.card_browse_course);
+        if (browseCourseCard != null) {
+            browseCourseCard.setOnClickListener(v -> {
+                // TODO: 实现浏览课程功能
+                // 示例跳转到课程浏览页面
+                Intent intent = new Intent(AdminManagementActivity.this, courseinfoActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        // 数据操作卡片点击事件
+        MaterialCardView courseDataOperationCard = findViewById(R.id.card_course_data_operation);
+        if (courseDataOperationCard != null) {
+            courseDataOperationCard.setOnClickListener(v -> {
+                // TODO: 实现数据操作功能
+                // 示例跳转到课程数据操作页面
+                Intent intent = new Intent(AdminManagementActivity.this, DataManagementActivity.class);
+                startActivity(intent);
+            });
+        }
+
         // 底部导航栏 - 首页按钮
         LinearLayout navHome = findViewById(R.id.nav_home);
         if (navHome != null) {

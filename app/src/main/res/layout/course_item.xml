@@ -33,45 +33,12 @@
                 android:textColor="@android:color/darker_gray" />
 
             <TextView
-                android:id="@+id/tv_course_teacher"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="授课教师: 张教授"
-                android:textSize="14sp"
-                android:textColor="@android:color/darker_gray" />
-
-            <TextView
                 android:id="@+id/tv_course_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="学分: 3 | 学时: 48"
                 android:textSize="14sp"
                 android:textColor="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/tv_course_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="时间: 周一 8:00-10:00"
-                android:textSize="14sp"
-                android:textColor="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/tv_course_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="地点: 教学楼A101"
-                android:textSize="14sp"
-                android:textColor="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/tv_course_score"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="成绩: 未知"
-                android:textSize="14sp"
-                android:textColor="@android:color/holo_blue_dark"
-                android:textStyle="bold" />
 
         </LinearLayout>
 

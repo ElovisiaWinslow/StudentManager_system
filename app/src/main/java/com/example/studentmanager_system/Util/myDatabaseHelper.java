@@ -11,15 +11,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.studentmanager_system.Tools.Course;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class myDatabaseHelper extends SQLiteOpenHelper {
 
     private static myDatabaseHelper instance;
     // 数据库名称
     private static final String DB_NAME = "StudentManagement.db";
-    // 数据库版本（更新为4以支持删除ranking字段和新增GPA字段）
-    private static final int DB_VERSION = 4;
+    // 数据库版本（更新为6以支持添加teacher_id字段）
+    private static final int DB_VERSION = 6;
 
     // 表名常量（便于后续引用）
     public static final String ADMIN_TABLE = "admin";
@@ -58,7 +60,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
             "department text, " +  // 所在系（新增字段）
             "course text)";  // 教授课程（替换原来的subject字段）
 
-    // 修改后：课程表结构（包含外键关联教师，并添加上课时间、地点和平均成绩字段）
+    // 修改后：课程表结构（包含外键关联教师，并添加上课时间、地点、年级和平均成绩字段）
     public static final String CREATE_COURSE = "create table " + COURSE_TABLE + " (" +
             "id text primary key, " +
             "name text not null, " +
@@ -68,6 +70,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
             "hours integer, " +  // 学时
             "class_time text, " +  // 上课时间（新增字段）
             "class_location text, " +  // 上课地点（新增字段）
+            "grade integer default 1, " +  // 年级字段（新增字段，默认值为1）
             "average_score real default 0, " +  // 平均成绩（新增字段，默认值为0）
             "foreign key(teacher_id) references " + TEACHER_TABLE + "(id))";  // 外键约束
 
@@ -76,9 +79,11 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
             "id integer primary key autoincrement, " +
             "student_id text, " +  // 学生ID（关联学生表）
             "course_id text, " +  // 课程ID（关联课程表）
+            "teacher_id text, " +  // 教师ID（关联教师表）
             "score real, " +  // 课程成绩
             "foreign key(student_id) references " + STUDENT_TABLE + "(id), " +
             "foreign key(course_id) references " + COURSE_TABLE + "(id), " +
+            "foreign key(teacher_id) references " + TEACHER_TABLE + "(id), " +  // 新增外键
             "unique(student_id, course_id))";  // 唯一约束：一个学生不能重复选同一门课
 
     // 私有构造函数（单例模式）
@@ -145,6 +150,17 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
             // 删除旧表
             db.execSQL("DROP TABLE " + STUDENT_TABLE + "_old");
         }
+
+        // 新增：为course表添加年级字段（版本4->5）
+        if (oldVersion < 5) {
+            db.execSQL("ALTER TABLE " + COURSE_TABLE + " ADD COLUMN grade INTEGER DEFAULT 1");
+        }
+
+        // 新增：为student_course表添加teacher_id字段（版本5->6）
+        if (oldVersion < 6) {
+            db.execSQL("ALTER TABLE " + STUDENT_COURSE_TABLE + " ADD COLUMN teacher_id TEXT");
+
+        }
     }
 
     // 新增：批量插入数据（用于导入功能）
@@ -174,6 +190,21 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         return isSelected;
     }
 
+    // 检查学生是否已选同一门课程的任何实例
+    public boolean isCourseNameSelected(String studentId, String courseName) {
+        SQLiteDatabase db = getReadableDatabase();
+        String sql = "SELECT COUNT(*) FROM " + STUDENT_COURSE_TABLE + " sc " +
+                "JOIN " + COURSE_TABLE + " c ON sc.course_id = c.id " +
+                "WHERE sc.student_id = ? AND c.name = ?";
+
+        Cursor cursor = db.rawQuery(sql, new String[]{studentId, courseName});
+        boolean result = false;
+        if (cursor.moveToFirst()) {
+            result = cursor.getInt(0) > 0;
+        }
+        cursor.close();
+        return result;
+    }
 
     // 获取学生已选课程详情（包含成绩）
     @SuppressLint("Range")
@@ -181,10 +212,10 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         List<Course> courses = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
 
-        String sql = "SELECT c.*, t.name as teacher_name, sc.score as score " +
+        String sql = "SELECT c.*, t.name as teacher_name, sc.score as score, sc.teacher_id as selected_teacher_id " +
                 "FROM " + STUDENT_COURSE_TABLE + " sc " +
                 "JOIN " + COURSE_TABLE + " c ON sc.course_id = c.id " +
-                "LEFT JOIN " + TEACHER_TABLE + " t ON c.teacher_id = t.id " +
+                "LEFT JOIN " + TEACHER_TABLE + " t ON sc.teacher_id = t.id " +
                 "WHERE sc.student_id = ?";
 
         Cursor cursor = db.rawQuery(sql, new String[]{studentId});
@@ -200,8 +231,10 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
             course.setClassTime(cursor.getString(cursor.getColumnIndex("class_time")));
             course.setClassLocation(cursor.getString(cursor.getColumnIndex("class_location")));
             course.setAverageScore(cursor.getFloat(cursor.getColumnIndex("average_score")));
+            course.setGrade(cursor.getInt(cursor.getColumnIndex("grade"))); // 添加年级字段
             // 设置成绩
             course.setScore(cursor.getFloat(cursor.getColumnIndex("score")));
+            course.setSelectedTeacherId(cursor.getString(cursor.getColumnIndex("selected_teacher_id")));
             courses.add(course);
         }
         cursor.close();
@@ -224,20 +257,35 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // 选课：插入选课记录
-    public boolean selectCourse(String studentId, String courseId) {
-        // 检查是否已选该课程
-        List<String> selected = getSelectedCourseIds(studentId);
-        if (selected.contains(courseId)) {
-            return false; // 已选则返回失败
+    public boolean selectCourse(String studentId, String courseId, String teacherId) {
+        // 检查是否已选该课程的任何实例
+        String courseName = getCourseNameById(courseId);
+        if (courseName != null && isCourseNameSelected(studentId, courseName)) {
+            return false; // 已选同一门课程的其他实例则返回失败
         }
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("student_id", studentId);
         values.put("course_id", courseId);
+        values.put("teacher_id", teacherId);
         values.put("score", 0); // 初始成绩为0
         long rowId = db.insert(STUDENT_COURSE_TABLE, null, values);
         return rowId != -1;
+    }
+
+    // 根据课程ID获取课程名称
+    public String getCourseNameById(String courseId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(COURSE_TABLE, new String[]{"name"},
+                "id=?", new String[]{courseId}, null, null, null);
+
+        String courseName = null;
+        if (cursor.moveToFirst()) {
+            courseName = cursor.getString(0);
+        }
+        cursor.close();
+        return courseName;
     }
 
     // 退课：删除选课记录
@@ -256,27 +304,55 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     public List<Course> getAllCourses() {
         List<Course> courses = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(COURSE_TABLE, null, null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            Course course = new Course();
-            course.setId(cursor.getString(cursor.getColumnIndex("id")));
-            course.setName(cursor.getString(cursor.getColumnIndex("name")));
-            course.setTeacherId(cursor.getString(cursor.getColumnIndex("teacher_id")));
-            course.setCredit(cursor.getFloat(cursor.getColumnIndex("credit")));
-            course.setHours(cursor.getInt(cursor.getColumnIndex("hours")));
-            course.setSubject(cursor.getString(cursor.getColumnIndex("subject")));
-            // 设置新增字段
-            course.setClassTime(cursor.getString(cursor.getColumnIndex("class_time")));
-            course.setClassLocation(cursor.getString(cursor.getColumnIndex("class_location")));
-            course.setAverageScore(cursor.getFloat(cursor.getColumnIndex("average_score")));
 
-            // 获取教授该课程的所有教师
-            List<String> teacherNames = getTeachersForCourse(db, course.getName());
-            course.setTeacherNames(teacherNames);
-
-            courses.add(course);
+        // 先获取所有不同的课程名称
+        Cursor nameCursor = db.rawQuery("SELECT DISTINCT name FROM " + COURSE_TABLE, null);
+        List<String> courseNames = new ArrayList<>();
+        while (nameCursor.moveToNext()) {
+            courseNames.add(nameCursor.getString(0));
         }
-        cursor.close();
+        nameCursor.close();
+
+        // 对每个课程名称，获取其所有实例
+        for (String courseName : courseNames) {
+            Cursor cursor = db.rawQuery(
+                    "SELECT c.*, t.name as teacher_name " +
+                            "FROM " + COURSE_TABLE + " c " +
+                            "LEFT JOIN " + TEACHER_TABLE + " t ON c.teacher_id = t.id " +
+                            "WHERE c.name = ?", new String[]{courseName});
+
+            List<Course> courseInstances = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                Course course = new Course();
+                course.setId(cursor.getString(cursor.getColumnIndex("id")));
+                course.setName(cursor.getString(cursor.getColumnIndex("name")));
+                course.setTeacherName(cursor.getString(cursor.getColumnIndex("teacher_name")));
+                course.setCredit(cursor.getFloat(cursor.getColumnIndex("credit")));
+                course.setHours(cursor.getInt(cursor.getColumnIndex("hours")));
+                course.setSubject(cursor.getString(cursor.getColumnIndex("subject")));
+                // 设置新增字段
+                course.setClassTime(cursor.getString(cursor.getColumnIndex("class_time")));
+                course.setClassLocation(cursor.getString(cursor.getColumnIndex("class_location")));
+                course.setAverageScore(cursor.getFloat(cursor.getColumnIndex("average_score")));
+                course.setGrade(cursor.getInt(cursor.getColumnIndex("grade"))); // 添加年级字段
+                courseInstances.add(course);
+            }
+            cursor.close();
+
+            // 创建一个聚合课程对象
+            if (!courseInstances.isEmpty()) {
+                Course aggregatedCourse = new Course();
+                aggregatedCourse.setName(courseName);
+                aggregatedCourse.setCourseInstances(courseInstances);
+                // 使用第一个实例的基本信息作为聚合课程的信息
+                Course firstInstance = courseInstances.get(0);
+                aggregatedCourse.setCredit(firstInstance.getCredit());
+                aggregatedCourse.setHours(firstInstance.getHours());
+                aggregatedCourse.setSubject(firstInstance.getSubject());
+                courses.add(aggregatedCourse);
+            }
+        }
+
         return courses;
     }
 
@@ -323,5 +399,36 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         );
 
         return rowsAffected > 0;
+    }
+
+    // 根据课程ID获取课程详细信息（包括所有教师信息）
+    @SuppressLint("Range")
+    public List<Course> getCourseDetailsByName(String courseName) {
+        List<Course> courses = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sql = "SELECT c.*, t.name as teacher_name " +
+                "FROM " + COURSE_TABLE + " c " +
+                "LEFT JOIN " + TEACHER_TABLE + " t ON c.teacher_id = t.id " +
+                "WHERE c.name = ?";
+
+        Cursor cursor = db.rawQuery(sql, new String[]{courseName});
+        while (cursor.moveToNext()) {
+            Course course = new Course();
+            course.setId(cursor.getString(cursor.getColumnIndex("id")));
+            course.setName(cursor.getString(cursor.getColumnIndex("name")));
+            course.setTeacherName(cursor.getString(cursor.getColumnIndex("teacher_name")));
+            course.setCredit(cursor.getFloat(cursor.getColumnIndex("credit")));
+            course.setHours(cursor.getInt(cursor.getColumnIndex("hours")));
+            course.setSubject(cursor.getString(cursor.getColumnIndex("subject")));
+            // 设置新增字段
+            course.setClassTime(cursor.getString(cursor.getColumnIndex("class_time")));
+            course.setClassLocation(cursor.getString(cursor.getColumnIndex("class_location")));
+            course.setAverageScore(cursor.getFloat(cursor.getColumnIndex("average_score")));
+            course.setGrade(cursor.getInt(cursor.getColumnIndex("grade"))); // 添加年级字段
+            courses.add(course);
+        }
+        cursor.close();
+        return courses;
     }
 }

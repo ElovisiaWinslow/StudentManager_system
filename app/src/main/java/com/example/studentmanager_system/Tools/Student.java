@@ -78,11 +78,12 @@ public class Student {
      * 选课
      * @param context 应用上下文
      * @param courseId 课程ID
+     * @param teacherId 教师ID
      * @return 是否选课成功
      */
-    public boolean selectCourse(Context context, String courseId) {
+    public boolean selectCourse(Context context, String courseId, String teacherId) {
         myDatabaseHelper dbHelper = myDatabaseHelper.getInstance(context);
-        return dbHelper.selectCourse(this.id, courseId);
+        return dbHelper.selectCourse(this.id, courseId, teacherId);
     }
 
     /**
