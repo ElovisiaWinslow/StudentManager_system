@@ -7,14 +7,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
@@ -44,6 +48,7 @@ public class courseinfoActivity extends AppCompatActivity {
     private myDatabaseHelper dbHelper;
     private CourseAdapter adapter;
     private Spinner gradeSpinner;
+    private EditText etSearch; // 搜索输入框引用
     private final List<String> gradeList = new ArrayList<>();
     private String selectedGrade = "";
     private String searchKeyword = ""; // 添加搜索关键字字段
@@ -88,8 +93,27 @@ public class courseinfoActivity extends AppCompatActivity {
 
         // 初始化筛选控件
         gradeSpinner = findViewById(R.id.spinner_grade);
+        etSearch = findViewById(R.id.et_search);
+        // 搜索按钮引用
+        Button btnSearch = findViewById(R.id.btn_search); // 初始化搜索按钮
 
         setupSpinners();
+
+        // 为搜索按钮设置监听器
+        btnSearch.setOnClickListener(v -> {
+            searchKeyword = etSearch.getText().toString().trim();
+            filterCourses();
+        });
+
+        // 监听软键盘上的完成按钮
+        etSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                searchKeyword = etSearch.getText().toString().trim();
+                filterCourses();
+                return true;
+            }
+            return false;
+        });
 
         initCourses(); // 从数据库中检索课程信息
         adapter = new CourseAdapter(courseinfoActivity.this, courseList, new ArrayList<>());
@@ -114,6 +138,42 @@ public class courseinfoActivity extends AppCompatActivity {
             }
             toggleSelection(position);
             return true;
+        });
+
+        // 如果是从其他地方带搜索词跳转过来的，设置到输入框
+        if (!searchKeyword.isEmpty()) {
+            etSearch.setText(searchKeyword);
+        }
+
+        // 设置底部导航栏点击事件
+        setupBottomNavigation();
+    }
+
+    // 添加底部导航栏设置方法
+    private void setupBottomNavigation() {
+        // 首页按钮
+        findViewById(R.id.nav_home).setOnClickListener(v -> {
+            // 回到管理员主页
+            Intent intent = new Intent(courseinfoActivity.this, adminActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
+
+        // 管理按钮
+        findViewById(R.id.nav_manage).setOnClickListener(v -> {
+            // 回到管理页面
+            Intent intent = new Intent(courseinfoActivity.this, AdminManagementActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        // 我的按钮
+        findViewById(R.id.nav_profile).setOnClickListener(v -> {
+            // 跳转到NJUPT信息页面
+            Intent intent = new Intent(courseinfoActivity.this, NjuptInfoActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -228,8 +288,10 @@ public class courseinfoActivity extends AppCompatActivity {
         List<String> args = new ArrayList<>();
 
         // 如果有搜索关键字，则添加搜索条件
+        // 修改：支持按课程ID、课程名称或教师ID搜索
         if (!searchKeyword.isEmpty()) {
-            conditions.add("(id LIKE ? OR name LIKE ?)");
+            conditions.add("(id LIKE ? OR name LIKE ? OR teacher_id LIKE ?)");
+            args.add("%" + searchKeyword + "%");
             args.add("%" + searchKeyword + "%");
             args.add("%" + searchKeyword + "%");
         } else {
@@ -252,7 +314,8 @@ public class courseinfoActivity extends AppCompatActivity {
             }
         }
 
-        queryBuilder.append(" ORDER BY name, id");
+        // 修改排序逻辑：优先按教师ID排序，其次按课程名称排序
+        queryBuilder.append(" ORDER BY teacher_id, name");
 
         Cursor cursor = db.rawQuery(queryBuilder.toString(),
                 args.isEmpty() ? null : args.toArray(new String[0]));
@@ -327,11 +390,45 @@ public class courseinfoActivity extends AppCompatActivity {
             delete_builder.setNegativeButton("取消", null);
             delete_builder.setPositiveButton("确定", (dialog, which) -> {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
-                // 删除所有同名课程
-                db.execSQL("DELETE FROM " + myDatabaseHelper.COURSE_TABLE + " WHERE name=?", new String[]{course.getName()});
-                courseList.remove(position); // 移除
-                adapter.notifyDataSetChanged(); // 刷新列表
-                clearSelection(); // 清除选择
+                try {
+                    db.beginTransaction(); // 开启事务
+
+                    String courseName = course.getName();
+
+                    // 1. 先查询将要删除的课程涉及哪些教师
+                    Cursor teacherCursor = db.query(
+                            myDatabaseHelper.COURSE_TABLE,
+                            new String[]{"DISTINCT teacher_id"},
+                            "name = ?",
+                            new String[]{courseName},
+                            null, null, null
+                    );
+
+                    List<String> affectedTeacherIds = new ArrayList<>();
+                    while (teacherCursor.moveToNext()) {
+                        affectedTeacherIds.add(teacherCursor.getString(teacherCursor.getColumnIndexOrThrow("teacher_id")));
+                    }
+                    teacherCursor.close();
+
+                    // 2. 删除所有同名课程
+                    db.execSQL("DELETE FROM " + myDatabaseHelper.COURSE_TABLE + " WHERE name=?", new String[]{courseName});
+
+                    // 3. 更新涉及的教师的course字段
+                    updateTeacherCoursesForTeachers(db, affectedTeacherIds);
+
+                    // 4. 更新UI
+                    courseList.remove(position);
+                    adapter.notifyDataSetChanged();
+                    clearSelection();
+
+                    db.setTransactionSuccessful(); // 提交事务
+                    Toast.makeText(courseinfoActivity.this, "课程及关联教师信息已更新", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.e("CourseInfoActivity", "删除课程失败", e);
+                    Toast.makeText(courseinfoActivity.this, "删除课程失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                } finally {
+                    db.endTransaction(); // 结束事务
+                }
             });
             delete_builder.create().show();
         });
@@ -530,14 +627,40 @@ public class courseinfoActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction(); // 开启事务，确保操作原子性
         try {
-            // 删除课程记录（删除所有同名课程）
+            // 收集所有将要删除的课程名称
+            Set<String> courseNamesToDelete = new HashSet<>();
             for (int position : positionsToDelete) {
                 if (position >= 0 && position < courseList.size()) {
                     Course course = courseList.get(position);
-                    db.execSQL("DELETE FROM " + myDatabaseHelper.COURSE_TABLE + " WHERE name=?",
-                            new String[]{course.getName()});
+                    courseNamesToDelete.add(course.getName());
                 }
             }
+
+            // 收集所有将要受到影响的教师ID
+            Set<String> affectedTeacherIds = new HashSet<>();
+            for (String courseName : courseNamesToDelete) {
+                Cursor teacherCursor = db.query(
+                        myDatabaseHelper.COURSE_TABLE,
+                        new String[]{"DISTINCT teacher_id"},
+                        "name = ?",
+                        new String[]{courseName},
+                        null, null, null
+                );
+
+                while (teacherCursor.moveToNext()) {
+                    affectedTeacherIds.add(teacherCursor.getString(teacherCursor.getColumnIndexOrThrow("teacher_id")));
+                }
+                teacherCursor.close();
+            }
+
+            // 删除课程记录（删除所有同名课程）
+            for (String courseName : courseNamesToDelete) {
+                db.execSQL("DELETE FROM " + myDatabaseHelper.COURSE_TABLE + " WHERE name=?",
+                        new String[]{courseName});
+            }
+
+            // 更新受影响的教师的course字段
+            updateTeacherCoursesForTeachers(db, new ArrayList<>(affectedTeacherIds));
 
             db.setTransactionSuccessful(); // 标记事务成功
 
@@ -551,12 +674,13 @@ public class courseinfoActivity extends AppCompatActivity {
             clearSelection();
             adapter.notifyDataSetChanged();
 
-            Toast.makeText(this, "成功删除" + positionsToDelete.size() + "门课程", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "成功删除" + positionsToDelete.size() + "门课程及相关教师信息", Toast.LENGTH_SHORT).show();
 
             // 退出批量模式
             exitBatchMode();
         } catch (Exception e) {
             Toast.makeText(this, "删除过程中发生错误: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("CourseInfoActivity", "批量删除课程失败", e);
         } finally {
             db.endTransaction(); // 结束事务
         }
@@ -603,5 +727,44 @@ public class courseinfoActivity extends AppCompatActivity {
                 filterCourses();
             }
         });
+    }
+
+    /**
+     * 更新指定教师列表的course字段
+     * @param db 数据库实例
+     * @param teacherIds 需要更新的教师ID列表
+     */
+    private void updateTeacherCoursesForTeachers(SQLiteDatabase db, List<String> teacherIds) {
+        for (String teacherId : teacherIds) {
+            // 获取该教师教授的所有课程
+            StringBuilder courses = new StringBuilder();
+            Cursor courseCursor = db.query(
+                    myDatabaseHelper.COURSE_TABLE,
+                    new String[]{"DISTINCT name"}, // 使用DISTINCT避免重复
+                    "teacher_id=?",
+                    new String[]{teacherId},
+                    null, null, "name"
+            );
+
+            if (courseCursor.moveToFirst()) {
+                do {
+                    if (courses.length() > 0) {
+                        courses.append(", ");
+                    }
+                    courses.append(courseCursor.getString(courseCursor.getColumnIndexOrThrow("name")));
+                } while (courseCursor.moveToNext());
+            }
+            courseCursor.close();
+
+            // 更新教师表中的course字段
+            ContentValues cv = new ContentValues();
+            cv.put("course", courses.toString());
+            db.update(
+                    myDatabaseHelper.TEACHER_TABLE,
+                    cv,
+                    "id=?",
+                    new String[]{teacherId}
+            );
+        }
     }
 }

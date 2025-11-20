@@ -20,21 +20,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:clickable="true"
+            android:focusable="true" />
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="个人信息"
+            android:text="个人资料"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:gravity="center" />
 
-        <com.example.studentmanager_system.Tools.RoundImageView
-            android:id="@+id/pic"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/student_photo" />
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
 
     </LinearLayout>
 
@@ -56,7 +64,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 基本信息卡片 -->
+            <!-- 个人信息卡片 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,87 +85,207 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="👤 基本信息"
+                        android:text="👤 个人信息"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
-                        android:layout_marginBottom="12dp" />
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <com.example.studentmanager_system.Tools.RoundImageView
+                            android:id="@+id/iv_student_photo"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/student_photo" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_student_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="学生姓名"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="#333333"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:id="@+id/tv_student_id"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="学号: S000001"
+                                android:textSize="14sp"
+                                android:textColor="#666666" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#EEEEEE"
+                        android:layout_marginBottom="16dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tv_student_id"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="学号: "
-                            android:textSize="16sp"
-                            android:textColor="#666666"
-                            android:layout_marginBottom="8dp" />
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp">
 
-                        <TextView
-                            android:id="@+id/tv_student_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="姓名: "
-                            android:textSize="16sp"
-                            android:textColor="#666666"
-                            android:layout_marginBottom="8dp" />
+                            <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="性别:"
+                                android:textSize="14sp"
+                                android:textColor="#999999" />
 
-                        <TextView
-                            android:id="@+id/tv_student_sex"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="性别: "
-                            android:textSize="16sp"
-                            android:textColor="#666666"
-                            android:layout_marginBottom="8dp" />
+                            <TextView
+                                android:id="@+id/tv_student_sex"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="男"
+                                android:textSize="14sp"
+                                android:textColor="#333333" />
 
-                        <TextView
-                            android:id="@+id/tv_student_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="电话: "
-                            android:textSize="16sp"
-                            android:textColor="#666666"
-                            android:layout_marginBottom="8dp" />
+                        </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tv_student_grade"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="年级: "
-                            android:textSize="16sp"
-                            android:textColor="#666666"
-                            android:layout_marginBottom="8dp" />
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp">
 
-                        <TextView
-                            android:id="@+id/tv_student_class"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="班级: "
-                            android:textSize="16sp"
-                            android:textColor="#666666"
-                            android:layout_marginBottom="8dp" />
+                            <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="联系电话:"
+                                android:textSize="14sp"
+                                android:textColor="#999999" />
 
-                        <TextView
-                            android:id="@+id/tv_student_ranking"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="GPA: "
-                            android:textSize="16sp"
-                            android:textColor="#666666"
-                            android:layout_marginBottom="8dp" />
+                            <TextView
+                                android:id="@+id/tv_student_number"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="13800000000"
+                                android:textSize="14sp"
+                                android:textColor="#333333" />
 
-                        <TextView
-                            android:id="@+id/tv_completed_credits"
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="已完成学分: "
-                            android:textSize="16sp"
-                            android:textColor="#666666" />
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp">
+
+                            <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="年级:"
+                                android:textSize="14sp"
+                                android:textColor="#999999" />
+
+                            <TextView
+                                android:id="@+id/tv_student_grade"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="大一"
+                                android:textSize="14sp"
+                                android:textColor="#333333" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp">
+
+                            <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="班级:"
+                                android:textSize="14sp"
+                                android:textColor="#999999" />
+
+                            <TextView
+                                android:id="@+id/tv_student_class"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="软件工程1班"
+                                android:textSize="14sp"
+                                android:textColor="#333333" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp">
+
+                            <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="GPA:"
+                                android:textSize="14sp"
+                                android:textColor="#999999" />
+
+                            <TextView
+                                android:id="@+id/tv_student_ranking"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="3.8"
+                                android:textSize="14sp"
+                                android:textColor="#333333" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="已完成学分:"
+                                android:textSize="14sp"
+                                android:textColor="#999999" />
+
+                            <TextView
+                                android:id="@+id/tv_completed_credits"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="60"
+                                android:textSize="14sp"
+                                android:textColor="#333333" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -189,38 +317,23 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
-                        android:layout_marginBottom="12dp" />
+                        android:layout_marginBottom="16dp" />
 
                     <TextView
                         android:id="@+id/tv_selected_courses"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="加载中..."
-                        android:textSize="16sp"
-                        android:textColor="#666666" />
+                        android:textSize="14sp"
+                        android:textColor="#666666"
+                        android:lineSpacingExtra="4dp" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
-
-    <!-- 导出按钮 -->
-    <Button
-        android:id="@+id/btn_export_profile"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="导出个人信息"
-        android:textSize="16sp"
-        android:backgroundTint="#2196F3"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- 底部导航栏 -->
     <LinearLayout
@@ -248,15 +361,14 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home"
-                app:tint="#666666" />
+                android:src="@drawable/ic_home_black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="首页"
                 android:textSize="12sp"
-                android:textColor="#666666"
+                android:textColor="@android:color/black"
                 android:layout_marginTop="4dp" />
 
         </LinearLayout>
@@ -276,15 +388,14 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_manage"
-                app:tint="#666666" />
+                android:src="@drawable/ic_manage" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="管理"
-                android:textColor="#666666"
+                android:textColor="@android:color/black"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -304,15 +415,14 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_profile"
-                app:tint="#2196F3" />
+                android:src="@drawable/ic_profile_blue" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="我的"
                 android:textSize="12sp"
-                android:textColor="#2196F3"
+                android:textColor="#1296db"
                 android:layout_marginTop="4dp" />
 
         </LinearLayout>

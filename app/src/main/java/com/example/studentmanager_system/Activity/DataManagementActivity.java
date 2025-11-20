@@ -2,6 +2,7 @@ package com.example.studentmanager_system.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,12 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.studentmanager_system.R;
 import com.example.studentmanager_system.Util.ExcelUtil;
 import com.example.studentmanager_system.Util.myDatabaseHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataManagementActivity extends AppCompatActivity {
@@ -30,6 +37,8 @@ public class DataManagementActivity extends AppCompatActivity {
     // 定义2个Launcher：分别处理「导出文件结果」和「选择文件导入结果」
     private ActivityResultLauncher<Intent> exportFileLauncher;
     private ActivityResultLauncher<Intent> importFileLauncher;
+
+    private static final String SAMPLE_DATA_FOLDER = "sample_data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,37 @@ public class DataManagementActivity extends AppCompatActivity {
         checkDatabaseAvailability();
         initActivityResultLaunchers();
         initButtons();
+
+        // 设置底部导航栏点击事件
+        setupBottomNavigation();
+    }
+
+    // 添加底部导航栏设置方法
+    private void setupBottomNavigation() {
+        // 首页按钮
+        findViewById(R.id.nav_home).setOnClickListener(v -> {
+            // 回到管理员主页
+            Intent intent = new Intent(DataManagementActivity.this, adminActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
+
+        // 管理按钮
+        findViewById(R.id.nav_manage).setOnClickListener(v -> {
+            // 回到管理页面
+            Intent intent = new Intent(DataManagementActivity.this, AdminManagementActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        // 我的按钮
+        findViewById(R.id.nav_profile).setOnClickListener(v -> {
+            // 跳转到NJUPT信息页面
+            Intent intent = new Intent(DataManagementActivity.this, NjuptInfoActivity.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     // 初始化Activity Result Launcher
@@ -238,6 +278,11 @@ public class DataManagementActivity extends AppCompatActivity {
             importType = "courses";
             startSelectFileFlow();
         });
+
+        // 添加一键导入示例数据按钮
+        findViewById(R.id.import_sample_data).setOnClickListener(v -> {
+            importSampleData();
+        });
     }
 
     private int getTableDataCount(String tableName) {
@@ -333,6 +378,96 @@ public class DataManagementActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "未授予存储权限，无法导出数据", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "用户拒绝了存储权限");
+            }
+        }
+    }
+
+    // 添加一键导入示例数据的方法
+    private void importSampleData() {
+        new Thread(() -> {
+            List<String> allErrors = new ArrayList<>();
+
+            try {
+                // 导入学生数据
+                List<String> studentErrors = importSampleFile("students.xlsx", "students");
+                allErrors.addAll(studentErrors);
+
+                // 导入教师数据
+                List<String> teacherErrors = importSampleFile("teachers.xlsx", "teachers");
+                allErrors.addAll(teacherErrors);
+
+                // 导入课程数据
+                List<String> courseErrors = importSampleFile("courses.xlsx", "courses");
+                allErrors.addAll(courseErrors);
+
+                runOnUiThread(() -> {
+                    if (allErrors.isEmpty()) {
+                        Toast.makeText(DataManagementActivity.this, "示例数据导入成功！", Toast.LENGTH_LONG).show();
+                    } else {
+                        StringBuilder errorMsg = new StringBuilder("部分数据导入失败：\n");
+                        for (String error : allErrors) {
+                            errorMsg.append(error).append("\n");
+                        }
+                        Toast.makeText(DataManagementActivity.this, errorMsg.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(DataManagementActivity.this, "导入示例数据时发生错误: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+            }
+        }).start();
+    }
+
+    // 添加从assets读取并导入示例文件的方法
+    private List<String> importSampleFile(String fileName, String type) {
+        try {
+            // 创建临时文件
+            File tempFile = new File(getCacheDir(), fileName);
+
+            // 从assets复制文件到临时文件
+            copyAssetsToFile(fileName, tempFile);
+
+            // 使用现有的导入方法
+            Uri tempUri = Uri.fromFile(tempFile);
+            List<String> errors;
+
+            switch (type) {
+                case "students":
+                    errors = ExcelUtil.importStudents(this, tempUri);
+                    break;
+                case "teachers":
+                    errors = ExcelUtil.importTeachers(this, tempUri);
+                    break;
+                case "courses":
+                    errors = ExcelUtil.importCourses(this, tempUri);
+                    break;
+                default:
+                    errors = new ArrayList<>();
+                    errors.add("未知的导入类型: " + type);
+            }
+
+            // 删除临时文件
+            tempFile.delete();
+
+            return errors;
+        } catch (Exception e) {
+            List<String> errors = new ArrayList<>();
+            errors.add(fileName + "导入失败: " + e.getMessage());
+            return errors;
+        }
+    }
+
+    // 复用你已有的copyAssetsToFile方法，稍作修改
+    private void copyAssetsToFile(String assetFileName, File destinationFile) throws IOException {
+        AssetManager assetManager = getAssets();
+        try (InputStream inputStream = assetManager.open(SAMPLE_DATA_FOLDER + "/" + assetFileName);
+             FileOutputStream outputStream = new FileOutputStream(destinationFile)) {
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
             }
         }
     }

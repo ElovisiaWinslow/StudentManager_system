@@ -36,6 +36,7 @@
         <activity android:name=".Activity.TeacherManagementActivity" />
         <activity android:name=".Activity.TeacherGradeManagementActivity" />
         <activity android:name=".Activity.TeacherCourseStudentsActivity" />
+        <activity android:name=".Activity.TeacherProfileActivity" />
         <activity android:name=".Activity.studentActivity" />
         <activity android:name=".Activity.StudentManagementActivity" />
         <activity android:name=".Activity.StudentStatisticsActivity" />
@@ -54,6 +55,8 @@
         <activity android:name=".Activity.SelectedCoursesActivity" />
 
         <activity android:name=".Activity.ScheduleActivity" />
+        <activity android:name=".Activity.TeacherScheduleActivity" />
+        <activity android:name=".Activity.TeacherExportProfileActivity" />
         <activity android:name=".Activity.FullMapActivity" />
 
 

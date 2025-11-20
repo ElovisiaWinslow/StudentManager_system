@@ -116,13 +116,13 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/ic_student"
+                                    android:src="@drawable/ic_coursetable"
                                     app:tint="#4CAF50" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="个人信息"
+                                    android:text="课程表"
                                     android:textSize="12sp"
                                     android:textColor="#4CAF50"
                                     android:textStyle="bold"
@@ -158,13 +158,13 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/ic_teacher"
+                                    android:src="@drawable/ic_selectcourse"
                                     app:tint="#2196F3" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="选课系统"
+                                    android:text="自主选课"
                                     android:textSize="12sp"
                                     android:textColor="#2196F3"
                                     android:textStyle="bold"
@@ -174,9 +174,9 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <!-- 修改密码卡片 -->
+                        <!-- 导出数据 -->
                         <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/card_change_password"
+                            android:id="@+id/card_export_data"
                             android:layout_width="0dp"
                             android:layout_height="90dp"
                             android:layout_margin="6dp"
@@ -199,13 +199,13 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/ic_settings"
+                                    android:src="@drawable/ic_data"
                                     app:tint="#FF9800" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="修改密码"
+                                    android:text="导出数据"
                                     android:textSize="12sp"
                                     android:textColor="#FF9800"
                                     android:textStyle="bold"
@@ -241,7 +241,7 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/ic_data"
+                                    android:src="@drawable/ic_selectedcourse"
                                     app:tint="#9C27B0" />
 
                                 <TextView
@@ -264,10 +264,10 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 数据统计卡片 -->
+            <!-- 系统信息卡片 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="16dp"
@@ -284,7 +284,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 学生概览"
+                        android:text="ℹ️ 系统信息"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
@@ -292,14 +292,13 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center">
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center">
@@ -307,15 +306,15 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="256"
-                                android:textSize="24sp"
+                                android:text="学生版"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="#2196F3" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="总学生数"
+                                android:text="用户类型"
                                 android:textSize="12sp"
                                 android:textColor="#666666"
                                 android:layout_marginTop="4dp" />
@@ -329,7 +328,7 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center">
@@ -337,15 +336,15 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="12"
-                                android:textSize="24sp"
+                                android:text="v1.0"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="#4CAF50" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="班级数量"
+                                android:text="系统版本"
                                 android:textSize="12sp"
                                 android:textColor="#666666"
                                 android:layout_marginTop="4dp" />
@@ -359,7 +358,7 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center">
@@ -367,27 +366,23 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="98%"
-                                android:textSize="24sp"
+                                android:text="正常"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="#FF9800" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="系统正常"
+                                android:text="系统状态"
                                 android:textSize="12sp"
                                 android:textColor="#666666"
                                 android:layout_marginTop="4dp" />
 
                         </LinearLayout>
-
                     </LinearLayout>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
-
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -418,7 +413,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home"
+                android:src="@drawable/ic_home_blue"
                 app:tint="#666666" />
 
             <TextView

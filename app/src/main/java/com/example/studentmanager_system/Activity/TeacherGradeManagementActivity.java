@@ -8,14 +8,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studentmanager_system.R;
 import com.example.studentmanager_system.Util.myDatabaseHelper;
@@ -27,7 +27,8 @@ import java.util.Map;
 
 public class TeacherGradeManagementActivity extends AppCompatActivity {
     private myDatabaseHelper dbHelper;
-    private ListView courseListView;
+    private RecyclerView courseRecyclerView;
+    private CourseDetailAdapter courseAdapter;
     private List<Map<String, String>> courseList;
     private String teacherId;
 
@@ -42,7 +43,9 @@ public class TeacherGradeManagementActivity extends AppCompatActivity {
         dbHelper = myDatabaseHelper.getInstance(this);
         courseList = new ArrayList<>();
 
-        courseListView = findViewById(R.id.course_list_view);
+        courseRecyclerView = findViewById(R.id.course_recycler_view);
+        courseRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         // 修改标题显示
         setTitle("成绩管理");
 
@@ -51,13 +54,6 @@ public class TeacherGradeManagementActivity extends AppCompatActivity {
 
         // 设置底部导航栏
         setupBottomNavigation();
-
-        // 课程列表点击事件：展示该课程的学生成绩
-        courseListView.setOnItemClickListener((parent, view, position, id) -> {
-            String courseId = courseList.get(position).get("courseId");
-            String courseName = courseList.get(position).get("courseName");
-            showCourseStudentsWithGrades(courseId, courseName);
-        });
     }
 
     // 设置底部导航栏点击事件
@@ -80,6 +76,17 @@ public class TeacherGradeManagementActivity extends AppCompatActivity {
             navManage.setOnClickListener(v -> {
                 // 进入管理页面
                 Intent intent = new Intent(TeacherGradeManagementActivity.this, TeacherManagementActivity.class);
+                intent.putExtra("teacherId", teacherId);
+                startActivity(intent);
+            });
+        }
+
+        // 底部导航栏 - 我的按钮
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 跳转到教师个人信息页面
+                Intent intent = new Intent(TeacherGradeManagementActivity.this, TeacherProfileActivity.class);
                 intent.putExtra("teacherId", teacherId);
                 startActivity(intent);
             });
@@ -125,53 +132,29 @@ public class TeacherGradeManagementActivity extends AppCompatActivity {
         }
         cursor.close();
 
-        // 绑定自定义适配器
-        CourseDetailAdapter courseAdapter = new CourseDetailAdapter();
-        courseListView.setAdapter(courseAdapter);
+        // 绑定适配器
+        courseAdapter = new CourseDetailAdapter(courseList);
+        courseRecyclerView.setAdapter(courseAdapter);
     }
 
     // 自定义适配器，用于展示课程详细信息
-    private class CourseDetailAdapter extends BaseAdapter {
+    private class CourseDetailAdapter extends RecyclerView.Adapter<CourseDetailAdapter.CourseViewHolder> {
+        private final List<Map<String, String>> courseList;
         private final LayoutInflater inflater;
 
-        public CourseDetailAdapter() {
+        public CourseDetailAdapter(List<Map<String, String>> courseList) {
+            this.courseList = courseList;
             this.inflater = LayoutInflater.from(TeacherGradeManagementActivity.this);
         }
 
         @Override
-        public int getCount() {
-            return courseList.size();
+        public CourseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.course_detail_item, parent, false);
+            return new CourseViewHolder(view);
         }
 
         @Override
-        public Object getItem(int position) {
-            return courseList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.course_detail_item, parent, false);
-                holder = new ViewHolder();
-                holder.tvCourseName = convertView.findViewById(R.id.tv_course_name);
-                holder.tvCourseCredit = convertView.findViewById(R.id.tv_course_credit);
-                holder.tvCourseHours = convertView.findViewById(R.id.tv_course_hours);
-                holder.tvCourseTime = convertView.findViewById(R.id.tv_course_time);
-                holder.tvCourseLocation = convertView.findViewById(R.id.tv_course_location);
-                holder.tvCourseAverageScore = convertView.findViewById(R.id.tv_course_average_score);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
+        public void onBindViewHolder(CourseViewHolder holder, int position) {
             Map<String, String> course = courseList.get(position);
 
             holder.tvCourseName.setText(course.get("courseName"));
@@ -181,16 +164,36 @@ public class TeacherGradeManagementActivity extends AppCompatActivity {
             holder.tvCourseLocation.setText(course.get("classLocation"));
             holder.tvCourseAverageScore.setText(course.get("averageScore"));
 
-            return convertView;
+            // 设置课程项点击事件
+            holder.itemView.setOnClickListener(v -> {
+                String courseId = course.get("courseId");
+                String courseName = course.get("courseName");
+                showCourseStudentsWithGrades(courseId, courseName);
+            });
         }
 
-        class ViewHolder {
+        @Override
+        public int getItemCount() {
+            return courseList.size();
+        }
+
+        class CourseViewHolder extends RecyclerView.ViewHolder {
             TextView tvCourseName;
             TextView tvCourseCredit;
             TextView tvCourseHours;
             TextView tvCourseTime;
             TextView tvCourseLocation;
             TextView tvCourseAverageScore;
+
+            public CourseViewHolder(View itemView) {
+                super(itemView);
+                tvCourseName = itemView.findViewById(R.id.tv_course_name);
+                tvCourseCredit = itemView.findViewById(R.id.tv_course_credit);
+                tvCourseHours = itemView.findViewById(R.id.tv_course_hours);
+                tvCourseTime = itemView.findViewById(R.id.tv_course_time);
+                tvCourseLocation = itemView.findViewById(R.id.tv_course_location);
+                tvCourseAverageScore = itemView.findViewById(R.id.tv_course_average_score);
+            }
         }
     }
 
@@ -312,6 +315,11 @@ public class TeacherGradeManagementActivity extends AppCompatActivity {
             dbHelper.updateCourseAverageScore(courseId);
             // 刷新界面显示最新的平均成绩
             refreshCourseAverageScore(courseId);
+
+            // 更新学生已完成学分
+            dbHelper.calculateAndSetStudentCredits(studentId);
+            // 自动更新学生GPA
+            dbHelper.calculateAndSetStudentGPA(studentId);
         }
 
         return rowsAffected > 0;
@@ -339,7 +347,7 @@ public class TeacherGradeManagementActivity extends AppCompatActivity {
             }
 
             // 通知适配器数据已更改
-            ((BaseAdapter) courseListView.getAdapter()).notifyDataSetChanged();
+            courseAdapter.notifyDataSetChanged();
         }
         cursor.close();
     }

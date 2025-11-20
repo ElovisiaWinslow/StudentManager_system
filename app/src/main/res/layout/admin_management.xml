@@ -458,7 +458,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home"
+                android:src="@drawable/ic_home_blue"
                 app:tint="#666666" />
 
             <TextView
@@ -484,7 +484,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="24dp"
+                android:layout_width="18dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_manage"
                 app:tint="#2196F3" />

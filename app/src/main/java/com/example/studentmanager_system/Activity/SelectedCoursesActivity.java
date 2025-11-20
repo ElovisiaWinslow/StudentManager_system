@@ -1,7 +1,9 @@
 // app/src/main/java/com/example/studentmanager_system/Activity/SelectedCoursesActivity.java
 package com.example.studentmanager_system.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,7 +36,50 @@ public class SelectedCoursesActivity extends AppCompatActivity {
         dbHelper = myDatabaseHelper.getInstance(this);
         courseListView = findViewById(R.id.selected_course_list);
 
+        // 初始化底部导航栏点击事件
+        initBottomNavigation();
+
         loadSelectedCourses();
+    }
+
+    /**
+     * 初始化底部导航栏点击事件
+     */
+    private void initBottomNavigation() {
+        // 首页按钮点击事件
+        LinearLayout navHome = findViewById(R.id.nav_home);
+        if (navHome != null) {
+            navHome.setOnClickListener(v -> {
+                // 跳转到学生主页
+                Intent intent = new Intent(SelectedCoursesActivity.this, studentActivity.class);
+                intent.putExtra("id", studentId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            });
+        }
+
+        // 管理按钮点击事件
+        LinearLayout navManage = findViewById(R.id.nav_manage);
+        if (navManage != null) {
+            navManage.setOnClickListener(v -> {
+                // 跳转到学生管理页面
+                Intent intent = new Intent(SelectedCoursesActivity.this, StudentManagementActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+            });
+        }
+
+        // 我的按钮点击事件
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 跳转到个人信息页面
+                Intent intent = new Intent(SelectedCoursesActivity.this, StudentProfileActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+            });
+        }
     }
 
     private void loadSelectedCourses() {

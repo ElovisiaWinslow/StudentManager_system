@@ -8,13 +8,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studentmanager_system.R;
 import com.example.studentmanager_system.Util.myDatabaseHelper;
@@ -28,7 +29,7 @@ import java.util.Map;
 // TeacherCourseStudentsActivity.java
 public class TeacherCourseStudentsActivity extends AppCompatActivity {
     private myDatabaseHelper dbHelper;
-    private ListView courseListView;
+    private RecyclerView courseRecyclerView;
     private List<Map<String, String>> courseList;
     private String teacherId;
 
@@ -43,7 +44,9 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
         dbHelper = new myDatabaseHelper(this);
         courseList = new ArrayList<>();
 
-        courseListView = findViewById(R.id.course_list_view);
+        courseRecyclerView = findViewById(R.id.course_recycler_view);
+        courseRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         // 修改标题显示
         setTitle("课程学生管理");
 
@@ -52,13 +55,6 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
 
         // 设置底部导航栏
         setupBottomNavigation();
-
-        // 课程列表点击事件：展示该课程的学生
-        courseListView.setOnItemClickListener((parent, view, position, id) -> {
-            String courseId = courseList.get(position).get("courseId");
-            String courseName = courseList.get(position).get("courseName");
-            showCourseStudents(courseId, courseName);
-        });
     }
 
     // 设置底部导航栏点击事件
@@ -81,6 +77,17 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
             navManage.setOnClickListener(v -> {
                 // 进入管理页面
                 Intent intent = new Intent(TeacherCourseStudentsActivity.this, TeacherManagementActivity.class);
+                intent.putExtra("teacherId", teacherId);
+                startActivity(intent);
+            });
+        }
+
+        // 底部导航栏 - 我的按钮
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 跳转到教师个人信息页面
+                Intent intent = new Intent(TeacherCourseStudentsActivity.this, TeacherProfileActivity.class);
                 intent.putExtra("teacherId", teacherId);
                 startActivity(intent);
             });
@@ -126,53 +133,30 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
         }
         cursor.close();
 
-        // 绑定自定义适配器
-        CourseDetailAdapter courseAdapter = new CourseDetailAdapter();
-        courseListView.setAdapter(courseAdapter);
+        // 绑定适配器
+        CourseDetailAdapter courseAdapter = new CourseDetailAdapter(courseList);
+        courseRecyclerView.setAdapter(courseAdapter);
     }
 
     // 自定义适配器，用于展示课程详细信息
-    private class CourseDetailAdapter extends BaseAdapter {
+    private class CourseDetailAdapter extends RecyclerView.Adapter<CourseDetailAdapter.CourseViewHolder> {
+        private final List<Map<String, String>> courseList;
         private final LayoutInflater inflater;
 
-        public CourseDetailAdapter() {
+        public CourseDetailAdapter(List<Map<String, String>> courseList) {
+            this.courseList = courseList;
             this.inflater = LayoutInflater.from(TeacherCourseStudentsActivity.this);
         }
 
+        @NonNull
         @Override
-        public int getCount() {
-            return courseList.size();
+        public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.course_detail_item, parent, false);
+            return new CourseViewHolder(view);
         }
 
         @Override
-        public Object getItem(int position) {
-            return courseList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.course_detail_item, parent, false);
-                holder = new ViewHolder();
-                holder.tvCourseName = convertView.findViewById(R.id.tv_course_name);
-                holder.tvCourseCredit = convertView.findViewById(R.id.tv_course_credit);
-                holder.tvCourseHours = convertView.findViewById(R.id.tv_course_hours);
-                holder.tvCourseTime = convertView.findViewById(R.id.tv_course_time);
-                holder.tvCourseLocation = convertView.findViewById(R.id.tv_course_location);
-                holder.tvCourseAverageScore = convertView.findViewById(R.id.tv_course_average_score);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
+        public void onBindViewHolder(CourseViewHolder holder, int position) {
             Map<String, String> course = courseList.get(position);
 
             holder.tvCourseName.setText(course.get("courseName"));
@@ -182,16 +166,36 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
             holder.tvCourseLocation.setText(course.get("classLocation"));
             holder.tvCourseAverageScore.setText(course.get("averageScore"));
 
-            return convertView;
+            // 设置课程项点击事件
+            holder.itemView.setOnClickListener(v -> {
+                String courseId = course.get("courseId");
+                String courseName = course.get("courseName");
+                showCourseStudents(courseId, courseName);
+            });
         }
 
-        class ViewHolder {
+        @Override
+        public int getItemCount() {
+            return courseList.size();
+        }
+
+        class CourseViewHolder extends RecyclerView.ViewHolder {
             TextView tvCourseName;
             TextView tvCourseCredit;
             TextView tvCourseHours;
             TextView tvCourseTime;
             TextView tvCourseLocation;
             TextView tvCourseAverageScore;
+
+            public CourseViewHolder(View itemView) {
+                super(itemView);
+                tvCourseName = itemView.findViewById(R.id.tv_course_name);
+                tvCourseCredit = itemView.findViewById(R.id.tv_course_credit);
+                tvCourseHours = itemView.findViewById(R.id.tv_course_hours);
+                tvCourseTime = itemView.findViewById(R.id.tv_course_time);
+                tvCourseLocation = itemView.findViewById(R.id.tv_course_location);
+                tvCourseAverageScore = itemView.findViewById(R.id.tv_course_average_score);
+            }
         }
     }
 
@@ -200,7 +204,7 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
         // 查询选了这门课的学生列表 - 使用正确的 student_course 表
         var db = dbHelper.getReadableDatabase();
         var cursor = db.rawQuery(
-                "SELECT sc.student_id, s.name, s.sex, s.number, s.grade, s.class " +
+                "SELECT sc.student_id, s.name, s.sex, s.number, s.grade, s.class, s.completedCredits, s.GPA " +
                         "FROM " + myDatabaseHelper.STUDENT_COURSE_TABLE + " sc " +
                         "JOIN " + myDatabaseHelper.STUDENT_TABLE + " s ON sc.student_id = s.id " +
                         "WHERE sc.course_id=?",
@@ -220,6 +224,9 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
             // 设置年级和班级信息
             student.setGrade(cursor.getInt(4));
             student.setClazz(cursor.getString(5));
+            // 设置已完成学分和GPA
+            student.setCompletedCredits(cursor.getFloat(6));
+            student.setGPA(cursor.getFloat(7));
             students.add(student);
         }
         cursor.close();
@@ -236,70 +243,75 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
         // 创建学生列表适配器
         StudentListAdapter adapter = new StudentListAdapter(students);
 
-        ListView listView = new ListView(this);
-        listView.setAdapter(adapter);
+        RecyclerView recyclerView = new RecyclerView(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
-        builder.setView(listView);
+        builder.setView(recyclerView);
         AlertDialog dialog = builder.create();
 
         // 设置学生列表项点击事件
-        listView.setOnItemClickListener((parent, view, position, id) -> {
+        adapter.setOnItemClickListener(student -> {
             dialog.dismiss();
-            showStudentDetails(students.get(position));
+            showStudentDetails(student);
         });
 
         dialog.show();
     }
 
+    // 定义接口在类外部，避免内部静态接口问题
+    interface OnItemClickListener {
+        void onItemClick(Student student);
+    }
+
     // 学生列表适配器
-    private class StudentListAdapter extends BaseAdapter {
+    private class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.StudentViewHolder> {
         private final List<Student> students;
         private final LayoutInflater inflater;
+        private OnItemClickListener listener;
 
         public StudentListAdapter(List<Student> students) {
             this.students = students;
             this.inflater = LayoutInflater.from(TeacherCourseStudentsActivity.this);
         }
 
-        @Override
-        public int getCount() {
-            return students.size();
+        public void setOnItemClickListener(OnItemClickListener listener) {
+            this.listener = listener;
         }
 
         @Override
-        public Object getItem(int position) {
-            return students.get(position);
+        public StudentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflater.inflate(android.R.layout.simple_list_item_2, parent, false);
+            return new StudentViewHolder(view);
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-
-            if (convertView == null) {
-                convertView = inflater.inflate(android.R.layout.simple_list_item_2, parent, false);
-                holder = new ViewHolder();
-                holder.text1 = convertView.findViewById(android.R.id.text1);
-                holder.text2 = convertView.findViewById(android.R.id.text2);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
+        public void onBindViewHolder(StudentViewHolder holder, int position) {
             Student student = students.get(position);
             holder.text1.setText(student.getName());
             holder.text2.setText("学号: " + student.getId());
 
-            return convertView;
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(student);
+                }
+            });
         }
 
-        class ViewHolder {
+        @Override
+        public int getItemCount() {
+            return students.size();
+        }
+
+        class StudentViewHolder extends RecyclerView.ViewHolder {
             TextView text1;
             TextView text2;
+
+            public StudentViewHolder(View itemView) {
+                super(itemView);
+                text1 = itemView.findViewById(android.R.id.text1);
+                text2 = itemView.findViewById(android.R.id.text2);
+            }
         }
     }
 
@@ -308,15 +320,15 @@ public class TeacherCourseStudentsActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("学生详细信息");
 
-        // 构建学生详细信息字符串
+        // 构建学生详细信息字符串，GPA保留两位小数
         String details = "姓名: " + student.getName() + "\n" +
                 "学号: " + student.getId() + "\n" +
                 "性别: " + student.getSex() + "\n" +
                 "电话: " + (student.getNumber() != null ? student.getNumber() : "未填写") + "\n" +
                 "年级: " + student.getGrade() + "\n" +
                 "班级: " + (student.getClazz() != null ? student.getClazz() : "未分配") + "\n" +
-                "已完成学分: " + student.getCompletedCredits() + "\n" +
-                "GPA: " + student.getGPA() + "\n";
+                "已完成学分: " + String.format("%.2f", student.getCompletedCredits()) + "\n" +
+                "GPA: " + String.format("%.2f", student.getGPA()) + "\n";
 
         builder.setMessage(details);
         builder.setPositiveButton("确定", null);

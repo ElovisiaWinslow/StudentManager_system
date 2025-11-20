@@ -35,10 +35,7 @@ public class CourseSelectionActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // 回到管理页面，结束当前选课页面
-                Intent intent = new Intent(CourseSelectionActivity.this, StudentManagementActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+                // 直接调用默认返回行为，返回到上一个页面
                 finish();
             }
         });
@@ -77,7 +74,17 @@ public class CourseSelectionActivity extends AppCompatActivity {
             });
         }
 
-        // 我的按钮（当前页面，不需要处理）
+        // 我的按钮点击事件
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 跳转到个人信息页面
+                Intent intent = new Intent(CourseSelectionActivity.this, StudentProfileActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+            });
+        }
+
     }
 
     private void loadAllCourses() {

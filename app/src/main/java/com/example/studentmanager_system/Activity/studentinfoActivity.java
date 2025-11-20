@@ -95,6 +95,9 @@ public class studentinfoActivity extends AppCompatActivity {
             toggleSelection(position);
             return true;
         });
+
+        // 设置底部导航栏
+        setupBottomNavigation();
     }
 
     // 初始化视图组件
@@ -114,6 +117,40 @@ public class studentinfoActivity extends AppCompatActivity {
             btnSelectAll.setOnClickListener(v -> selectAll());
             btnDeselectAll.setOnClickListener(v -> deselectAll());
             btnDeleteSelected.setOnClickListener(v -> deleteSelectedStudents());
+        }
+    }
+
+    // 添加底部导航栏设置方法
+    private void setupBottomNavigation() {
+        // 首页按钮
+        LinearLayout navHome = findViewById(R.id.nav_home);
+        if (navHome != null) {
+            navHome.setOnClickListener(v -> {
+                // 回到管理员主页
+                Intent intent = new Intent(studentinfoActivity.this, adminActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            });
+        }
+
+        // 管理按钮
+        LinearLayout navManage = findViewById(R.id.nav_manage);
+        if (navManage != null) {
+            navManage.setOnClickListener(v -> {
+                finish();
+            });
+        }
+
+        // 我的按钮
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 跳转到NJUPT信息页面
+                Intent intent = new Intent(studentinfoActivity.this, NjuptInfoActivity.class);
+                startActivity(intent);
+                finish();
+            });
         }
     }
 

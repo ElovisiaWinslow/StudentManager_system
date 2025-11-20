@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -114,7 +115,7 @@ public class ExportProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -190,11 +191,11 @@ public class ExportProfileActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("Range")
+    @SuppressLint({"Range", "DefaultLocale"})
     private void createStudentInfoSheet(Sheet sheet, myDatabaseHelper dbHelper) {
         // 表头
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"学号", "姓名", "性别", "电话", "年级", "班级", "排名", "已完成学分"};
+        String[] headers = {"学号", "姓名", "性别", "电话", "年级", "班级", "GPA", "已完成学分"};
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
@@ -204,7 +205,7 @@ public class ExportProfileActivity extends AppCompatActivity {
         var db = dbHelper.getReadableDatabase();
         var cursor = db.query(
                 myDatabaseHelper.STUDENT_TABLE,
-                new String[]{"id", "name", "sex", "number", "grade", "class", "ranking", "completedCredits"},
+                new String[]{"id", "name", "sex", "number", "grade", "class", "GPA", "completedCredits"},
                 "id=?",
                 new String[]{studentId},
                 null, null, null
@@ -214,7 +215,12 @@ public class ExportProfileActivity extends AppCompatActivity {
             Row dataRow = sheet.createRow(1);
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = dataRow.createCell(i);
-                cell.setCellValue(cursor.getString(i));
+                if (i == 6) { // GPA字段需要格式化
+                    double gpa = cursor.getDouble(i);
+                    cell.setCellValue(String.format("%.2f", gpa));
+                } else {
+                    cell.setCellValue(cursor.getString(i));
+                }
             }
         }
         cursor.close();

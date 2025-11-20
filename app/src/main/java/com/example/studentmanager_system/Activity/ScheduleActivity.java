@@ -2,6 +2,7 @@
 package com.example.studentmanager_system.Activity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -42,6 +43,7 @@ public class ScheduleActivity extends AppCompatActivity {
         dbHelper = myDatabaseHelper.getInstance(this);
         loadSelectedCourses();
         displaySchedule();
+        setupBottomNavigation(); // 添加底部导航栏设置
     }
 
     private void loadSelectedCourses() {
@@ -244,6 +246,48 @@ public class ScheduleActivity extends AppCompatActivity {
             conflictWarningLayout.setVisibility(View.VISIBLE);
         } else {
             conflictWarningLayout.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 设置底部导航栏点击事件
+     */
+    private void setupBottomNavigation() {
+        // 首页按钮
+        LinearLayout navHome = findViewById(R.id.nav_home);
+        if (navHome != null) {
+            navHome.setOnClickListener(v -> {
+                // 跳转到学生主页
+                Intent intent = new Intent(ScheduleActivity.this, studentActivity.class);
+                intent.putExtra("id", studentId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            });
+        }
+
+        // 管理按钮
+        LinearLayout navManage = findViewById(R.id.nav_manage);
+        if (navManage != null) {
+            navManage.setOnClickListener(v -> {
+                // 跳转到学生管理页面
+                Intent intent = new Intent(ScheduleActivity.this, StudentManagementActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+                finish();
+            });
+        }
+
+        // 我的按钮
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 跳转到学生个人资料页面
+                Intent intent = new Intent(ScheduleActivity.this, StudentProfileActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+                finish();
+            });
         }
     }
 }

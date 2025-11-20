@@ -485,44 +485,8 @@ public class ExcelUtil {
                         Log.d(TAG, "成功插入/更新教师: " + id + ", 姓名: " + name);
                     }
 
-                    // 新增：同步添加课程到课程表（若任教课程不为空）
-                    if (result != -1 && !TextUtils.isEmpty(course)) {
-                        // 生成课程ID（可自定义规则，例如"教师ID_课程"）
-                        String courseId = id + "_" + course.replace(" ", "");
-                        // 课程名称默认使用任教课程名称
-                        // 课程其他字段（学分、学时可设默认值，或后续扩展为输入项）
-                        double credit = 3.0; // 默认学分
-                        int hours = 48;      // 默认学时
-                        String classTime = ""; // 默认上课时间
-                        String classLocation = ""; // 默认上课地点
-                        int grade = 1; // 默认年级
+                    // 移除了原有的自动创建课程的逻辑
 
-                        // 插入课程（使用REPLACE策略）
-                        ContentValues courseCv = new ContentValues();
-                        courseCv.put("id", courseId);
-                        courseCv.put("name", course);
-                        courseCv.put("teacher_id", id);
-                        courseCv.put("subject", course);
-                        courseCv.put("credit", credit);
-                        courseCv.put("hours", hours);
-                        courseCv.put("class_time", classTime);      // 上课时间字段
-                        courseCv.put("class_location", classLocation); // 上课地点字段
-                        courseCv.put("grade", grade); // 年级字段
-                        courseCv.put("average_score", 0.0); // 默认平均成绩
-
-                        long courseResult = db.insertWithOnConflict(
-                                myDatabaseHelper.COURSE_TABLE,
-                                null,
-                                courseCv,
-                                SQLiteDatabase.CONFLICT_REPLACE
-                        );
-
-                        if (courseResult == -1) {
-                            Log.w(TAG, "创建教师课程失败: " + courseId);
-                        } else {
-                            Log.d(TAG, "成功创建教师课程: " + courseId);
-                        }
-                    }
                 } catch (Exception e) {
                     errors.add("第" + (r + 1) + "行：" + e.getMessage());
                     Log.e(TAG, "处理第" + (r + 1) + "行时出错", e);
@@ -551,6 +515,7 @@ public class ExcelUtil {
 
         return errors;
     }
+
 
     // 导入课程数据（已修改：处理所有课程字段，包括subject）
     public static List<String> importCourses(Context context, Uri uri) {
@@ -721,6 +686,9 @@ public class ExcelUtil {
             db.setTransactionSuccessful(); // 标记事务成功
             Log.d(TAG, "课程导入事务提交成功，共成功处理 " + successCount + " 条记录");
 
+            // 新增：更新教师表中的教授课程字段
+            updateTeacherCourses(db);
+
         } catch (Exception e) {
             errors.add("导入失败：" + e.getMessage());
             Log.e(TAG, "导入课程数据异常", e);
@@ -739,6 +707,60 @@ public class ExcelUtil {
         }
 
         return errors;
+    }
+
+    /**
+     * 更新教师表中的教授课程字段
+     * @param db 数据库实例
+     */
+    private static void updateTeacherCourses(SQLiteDatabase db) {
+        // 查询所有教师
+        Cursor teacherCursor = db.query(
+                myDatabaseHelper.TEACHER_TABLE,
+                new String[]{"id"},
+                null, null, null, null, null
+        );
+
+        if (teacherCursor.moveToFirst()) {
+            do {
+                String teacherId = teacherCursor.getString(teacherCursor.getColumnIndexOrThrow("id"));
+
+                // 获取该教师教授的所有课程
+                StringBuilder courses = new StringBuilder();
+                Cursor courseCursor = db.query(
+                        myDatabaseHelper.COURSE_TABLE,
+                        new String[]{"name"},
+                        "teacher_id=?",
+                        new String[]{teacherId},
+                        null, null, null
+                );
+
+                if (courseCursor.moveToFirst()) {
+                    do {
+                        if (courses.length() > 0) {
+                            courses.append(", ");
+                        }
+                        courses.append(courseCursor.getString(courseCursor.getColumnIndexOrThrow("name")));
+                    } while (courseCursor.moveToNext());
+                } else {
+                    courses.append(""); // 如果没有课程，设置为空字符串
+                }
+                courseCursor.close();
+
+                // 更新教师表中的course字段
+                ContentValues cv = new ContentValues();
+                cv.put("course", courses.toString());
+                db.update(
+                        myDatabaseHelper.TEACHER_TABLE,
+                        cv,
+                        "id=?",
+                        new String[]{teacherId}
+                );
+            } while (teacherCursor.moveToNext());
+        }
+        teacherCursor.close();
+
+        Log.d(TAG, "教师教授课程字段更新完成");
     }
 
     // 辅助方法：安全获取单元格字符串值

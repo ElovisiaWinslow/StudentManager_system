@@ -107,4 +107,60 @@ public class Student {
         myDatabaseHelper dbHelper = myDatabaseHelper.getInstance(context);
         return dbHelper.isCourseSelected(this.id, courseId);
     }
+
+    /**
+     * 计算学生GPA
+     * GPA = Σ(课程学分 × 课程绩点) / Σ(课程学分)
+     * 课程绩点 = 成绩 × 0.05 (按每1分对应0.05绩点规则)
+     * @param context 应用上下文
+     * @return 计算得到的GPA值
+     */
+    public double calculateGPA(Context context) {
+        List<Course> selectedCourses = getSelectedCourses(context);
+        double totalCreditPoints = 0.0;
+        double totalCredits = 0.0;
+
+        for (Course course : selectedCourses) {
+            double score = course.getScore();
+            // 只计算有效成绩（排除未录入的成绩，即score >= 0）
+            if (score >= 0) {
+                double gradePoint = score * 0.05; // 每1分对应0.05绩点
+                totalCreditPoints += course.getCredit() * gradePoint;
+                totalCredits += course.getCredit();
+            }
+        }
+
+        if (totalCredits == 0) {
+            return 0.0;
+        }
+
+        double calculatedGPA = totalCreditPoints / totalCredits;
+        // 更新学生GPA
+        setGPA(calculatedGPA);
+        return calculatedGPA;
+    }
+
+    /**
+     * 根据成绩更新已完成学分
+     * @param context 应用上下文
+     * @return 更新后的已完成学分
+     */
+    public double updateCompletedCredits(Context context) {
+        myDatabaseHelper dbHelper = myDatabaseHelper.getInstance(context);
+        double completedCredits = 0.0;
+        List<Course> selectedCourses = getSelectedCourses(context);
+
+        for (Course course : selectedCourses) {
+            // 成绩大于等于60分视为获得该课程学分
+            if (course.getScore() >= 60) {
+                completedCredits += course.getCredit();
+            }
+        }
+
+        // 更新学生已完成学分
+        setCompletedCredits(completedCredits);
+        // 同步更新数据库
+        dbHelper.updateStudentCredits(this.id, completedCredits);
+        return completedCredits;
+    }
 }

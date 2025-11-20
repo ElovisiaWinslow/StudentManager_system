@@ -181,6 +181,16 @@ public class AdminManageStudentActivity extends AppCompatActivity {
                 finish();
             });
         }
+
+        // 我的按钮
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 跳转到NJUPT信息页面
+                Intent intent = new Intent(AdminManageStudentActivity.this, NjuptInfoActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     @Override

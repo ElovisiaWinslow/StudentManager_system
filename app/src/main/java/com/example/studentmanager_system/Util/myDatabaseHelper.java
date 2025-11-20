@@ -294,8 +294,15 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         values.put("student_id", studentId);
         values.put("course_id", courseId);
         values.put("teacher_id", teacherId);
-        values.put("score", 0); // 初始成绩为0
+        values.put("score", -1); // 修改为-1作为默认成绩，表示未录入
         long rowId = db.insert(STUDENT_COURSE_TABLE, null, values);
+
+        // 选课成功后自动更新GPA和已完成学分
+        if (rowId != -1) {
+            calculateAndSetStudentGPA(studentId);
+            calculateAndSetStudentCredits(studentId);
+        }
+
         return rowId != -1;
     }
 
@@ -331,7 +338,15 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
                 "student_id=? and course_id=?",
                 new String[]{studentId, courseId}
         );
-        return rowsDeleted > 0;
+
+        // 退课成功后自动更新GPA和已完成学分
+        boolean success = rowsDeleted > 0;
+        if (success) {
+            calculateAndSetStudentGPA(studentId);
+            calculateAndSetStudentCredits(studentId);
+        }
+
+        return success;
     }
 
     // 获取所有课程（补充方法）
@@ -482,5 +497,111 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return courses;
+    }
+
+    /**
+     * 更新学生已完成学分
+     * @param studentId 学生ID
+     * @param credits 已完成学分
+     * @return 是否更新成功
+     */
+    public boolean updateStudentCredits(String studentId, double credits) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("completedCredits", credits);
+
+        int rowsAffected = db.update(
+                STUDENT_TABLE,
+                values,
+                "id=?",
+                new String[]{studentId}
+        );
+
+        return rowsAffected > 0;
+    }
+
+    /**
+     * 计算并更新学生已完成学分
+     * @param studentId 学生ID
+     * @return 更新后的已完成学分
+     */
+    public double calculateAndSetStudentCredits(String studentId) {
+        // 获取学生已选课程
+        List<Course> selectedCourses = getSelectedCourses(studentId);
+        double completedCredits = 0.0;
+
+        // 计算已完成学分（成绩>=60的课程）
+        for (Course course : selectedCourses) {
+            if (course.getScore() >= 60) {
+                completedCredits += course.getCredit();
+            }
+        }
+
+        // 更新数据库中的已完成学分
+        updateStudentCredits(studentId, completedCredits);
+
+        return completedCredits;
+    }
+
+    /**
+     * 计算并更新学生GPA
+     * @param studentId 学生ID
+     * @return 更新后的GPA值
+     */
+    public double calculateAndSetStudentGPA(String studentId) {
+        // 获取学生已选课程
+        List<Course> selectedCourses = getSelectedCourses(studentId);
+        double totalCreditPoints = 0.0;
+        double totalCredits = 0.0;
+
+        // 计算GPA
+        for (Course course : selectedCourses) {
+            double score = course.getScore();
+            // 只计算有效成绩（排除未录入的成绩，即score >= 0）
+            if (score >= 0) {
+                double gradePoint;
+                if (score < 60) {
+                    gradePoint = 1.0; // 60分以下统一按1.0绩点计算
+                } else {
+                    // 将60-100分映射到1.0-5.0绩点范围
+                    // 公式：1.0 + (score - 60) * (4.0 / 40) = 1.0 + (score - 60) * 0.1
+                    gradePoint = 1.0 + (score - 60) * 0.1;
+                }
+                totalCreditPoints += course.getCredit() * gradePoint;
+                totalCredits += course.getCredit();
+            }
+        }
+
+        double gpa = 0.0;
+        if (totalCredits > 0) {
+            gpa = totalCreditPoints / totalCredits;
+        }
+
+        // 更新数据库中的GPA
+        updateStudentGPA(studentId, gpa);
+
+        return gpa;
+    }
+
+
+    /**
+     * 更新学生GPA
+     * @param studentId 学生ID
+     * @param gpa GPA值
+     * @return 是否更新成功
+     */
+    public boolean updateStudentGPA(String studentId, double gpa) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("GPA", gpa);
+
+        int rowsAffected = db.update(
+                STUDENT_TABLE,
+                values,
+                "id=?",
+                new String[]{studentId}
+        );
+
+        return rowsAffected > 0;
     }
 }

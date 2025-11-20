@@ -1,3 +1,4 @@
+// app/src/main/java/com/example/studentmanager_system/Activity/TeacherManagementActivity.java
 package com.example.studentmanager_system.Activity;
 
 import android.content.Intent;
@@ -40,17 +41,18 @@ public class TeacherManagementActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        // 查询个人信息卡片点击事件
+        // 查询个人授课表卡片点击事件
         MaterialCardView selectInfoCard = findViewById(R.id.card_select_info);
         if (selectInfoCard != null) {
             selectInfoCard.setOnClickListener(v -> {
-                // 进入查询个人信息功能
-                // TODO: 实现跳转到查询个人信息页面的逻辑
+                // 进入授课表功能
+                Intent intent = new Intent(TeacherManagementActivity.this, TeacherScheduleActivity.class);
+                intent.putExtra("teacherId", teacherId);
+                startActivity(intent);
             });
         }
 
-// 在 TeacherManagementActivity.java 的 setupClickListeners 方法中替换学生成绩管理卡片的点击事件
-// 学生成绩管理卡片点击事件
+        // 学生成绩管理卡片点击事件
         MaterialCardView manageGradesCard = findViewById(R.id.card_manage_grades);
         if (manageGradesCard != null) {
             manageGradesCard.setOnClickListener(v -> {
@@ -61,13 +63,14 @@ public class TeacherManagementActivity extends AppCompatActivity {
             });
         }
 
-
-        // 修改密码卡片点击事件
-        MaterialCardView changePasswordCard = findViewById(R.id.card_change_password);
-        if (changePasswordCard != null) {
-            changePasswordCard.setOnClickListener(v -> {
-                // 进入修改密码功能
-                // TODO: 实现跳转到修改密码页面的逻辑
+        // 导出数据卡片点击事件
+        MaterialCardView exportDataCard = findViewById(R.id.card_export_data);
+        if (exportDataCard != null) {
+            exportDataCard.setOnClickListener(v -> {
+                // 进入导出数据功能
+                Intent intent = new Intent(TeacherManagementActivity.this, TeacherExportProfileActivity.class);
+                intent.putExtra("teacherId", teacherId);
+                startActivity(intent);
             });
         }
 
@@ -82,7 +85,6 @@ public class TeacherManagementActivity extends AppCompatActivity {
             });
         }
 
-
         // 底部导航栏 - 首页按钮
         LinearLayout navHome = findViewById(R.id.nav_home);
         if (navHome != null) {
@@ -96,5 +98,16 @@ public class TeacherManagementActivity extends AppCompatActivity {
         }
 
         // 底部导航栏 - 管理按钮（当前页面，不需要处理）
+
+        // 底部导航栏 - 我的按钮
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 跳转到教师个人资料页面
+                Intent intent = new Intent(TeacherManagementActivity.this, TeacherProfileActivity.class);
+                intent.putExtra("teacherId", teacherId);
+                startActivity(intent);
+            });
+        }
     }
 }

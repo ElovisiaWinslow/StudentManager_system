@@ -79,17 +79,54 @@
                 android:id="@+id/filter_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_marginBottom="12dp">
 
-                <Spinner
-                    android:id="@+id/spinner_grade"
-                    android:layout_width="0dp"
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:prompt="@string/select_grade" />
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinner_grade"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:background="@android:drawable/btn_dropdown"
+                        android:prompt="@string/select_grade" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <!-- 搜索输入框 -->
+                    <EditText
+                        android:id="@+id/et_search"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="请输入课程名或教师ID进行搜索"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:imeOptions="actionDone" />
+
+                    <!-- 搜索按钮 -->
+                    <Button
+                        android:id="@+id/btn_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="搜索"
+                        android:layout_marginStart="8dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -151,7 +188,6 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-
             </LinearLayout>
 
             <ListView
@@ -192,7 +228,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
+                android:src="@drawable/ic_home_black" />
 
             <TextView
                 android:layout_width="wrap_content"

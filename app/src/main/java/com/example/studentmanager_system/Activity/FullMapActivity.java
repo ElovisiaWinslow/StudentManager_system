@@ -32,9 +32,6 @@ public class FullMapActivity extends Activity {
         mapTitle = findViewById(R.id.full_map_title);
         zoomLayout = findViewById(R.id.zoom_layout);
 
-        // 返回按钮
-        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
-
         // 初始时图片自适应屏幕
         fullMapImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
     }

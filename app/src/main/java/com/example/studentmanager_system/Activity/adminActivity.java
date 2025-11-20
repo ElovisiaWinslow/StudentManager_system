@@ -119,8 +119,6 @@ public class adminActivity extends Activity {
         MaterialCardView browseCourseCard = findViewById(R.id.card_ranking);
         if (browseCourseCard != null) {
             browseCourseCard.setOnClickListener(v -> {
-                // TODO: 实现浏览课程功能
-                // 示例跳转到课程浏览页面
                 Intent intent = new Intent(adminActivity.this, courseinfoActivity.class);
                 startActivity(intent);
             });

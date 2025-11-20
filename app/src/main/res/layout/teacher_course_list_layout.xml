@@ -83,23 +83,20 @@
                         android:text="我的课程"
                         android:textSize="20sp"
                         android:textStyle="bold"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:gravity="center"
-                        android:padding="16dp"
                         android:textColor="@android:color/black"
-                        android:background="@drawable/rounded_corner_bg"
                         android:textColorHint="@android:color/white" />
 
-                    <ListView
-                        android:id="@+id/course_list_view"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/course_recycler_view"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
-                        android:divider="@null"
-                        android:dividerHeight="8dp"
                         android:padding="8dp"
                         android:clipToPadding="false"
                         android:clipChildren="false"/>
@@ -136,7 +133,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
+                android:src="@drawable/ic_home_black" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -163,14 +160,14 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_manage" />
+                android:src="@drawable/ic_manage_blue" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="管理"
-                android:textColor="@android:color/black"
+                android:textColor="#1296db"
                 android:textSize="12sp" />
 
         </LinearLayout>

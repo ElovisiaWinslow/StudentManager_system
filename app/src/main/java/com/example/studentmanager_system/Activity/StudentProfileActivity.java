@@ -4,9 +4,10 @@ package com.example.studentmanager_system.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.LinearLayout; // 添加导入
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,6 +44,7 @@ public class StudentProfileActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        // 初始化 TextView 组件
         tvStudentId = findViewById(R.id.tv_student_id);
         tvStudentName = findViewById(R.id.tv_student_name);
         tvStudentSex = findViewById(R.id.tv_student_sex);
@@ -52,12 +54,57 @@ public class StudentProfileActivity extends AppCompatActivity {
         tvStudentRanking = findViewById(R.id.tv_student_ranking);
         tvCompletedCredits = findViewById(R.id.tv_completed_credits);
         tvSelectedCourses = findViewById(R.id.tv_selected_courses);
-        Button btnExportProfile = findViewById(R.id.btn_export_profile);
 
-        btnExportProfile.setOnClickListener(v -> exportStudentProfile());
+        // 移除导出按钮的初始化代码
+
+        // 初始化返回按钮并设置点击监听器
+        ImageView btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(v -> {
+            finish(); // 关闭当前活动，返回上一个页面
+        });
+
+        // 初始化底部导航栏按钮并设置点击监听器
+        initBottomNavigation();
     }
 
-    @SuppressLint("SetTextI18n")
+    /**
+     * 初始化底部导航栏点击事件
+     */
+    private void initBottomNavigation() {
+        // 首页按钮点击事件
+        LinearLayout navHome = findViewById(R.id.nav_home);
+        if (navHome != null) {
+            navHome.setOnClickListener(v -> {
+                // 跳转到学生主页
+                Intent intent = new Intent(StudentProfileActivity.this, studentActivity.class);
+                intent.putExtra("id", studentId); // 传递学生ID
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            });
+        }
+
+        // 管理按钮点击事件
+        LinearLayout navManage = findViewById(R.id.nav_manage);
+        if (navManage != null) {
+            navManage.setOnClickListener(v -> {
+                // 跳转到学生管理页面
+                Intent intent = new Intent(StudentProfileActivity.this, StudentManagementActivity.class);
+                intent.putExtra("studentId", studentId); // 传递学生ID
+                startActivity(intent);
+            });
+        }
+
+        // 我的按钮点击事件（当前页面，无需处理）
+        LinearLayout navProfile = findViewById(R.id.nav_profile);
+        if (navProfile != null) {
+            navProfile.setOnClickListener(v -> {
+                // 当前已在个人资料页面，无需跳转
+            });
+        }
+    }
+
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void loadStudentInfo() {
         // 查询学生基本信息
         var db = dbHelper.getReadableDatabase();
@@ -72,17 +119,22 @@ public class StudentProfileActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             tvStudentId.setText("学号: " + cursor.getString(0));
             tvStudentName.setText("姓名: " + cursor.getString(1));
-            tvStudentSex.setText("性别: " + cursor.getString(2));
-            tvStudentNumber.setText("电话: " + cursor.getString(3));
-            tvStudentGrade.setText("年级: " + cursor.getString(4));
-            tvStudentClass.setText("班级: " + cursor.getString(5));
-            tvStudentRanking.setText("GPA: " + cursor.getString(6));
-            tvCompletedCredits.setText("已完成学分: " + cursor.getString(7));
+            tvStudentSex.setText(cursor.getString(2));
+            tvStudentNumber.setText(cursor.getString(3));
+            tvStudentGrade.setText(cursor.getString(4));
+            tvStudentClass.setText(cursor.getString(5));
+
+            // 格式化GPA显示，保留两位小数
+            double gpa = cursor.getDouble(6);
+            tvStudentRanking.setText(String.format("%.2f", gpa));
+
+            tvCompletedCredits.setText(cursor.getString(7));
         } else {
             Toast.makeText(this, "未找到学生信息", Toast.LENGTH_SHORT).show();
         }
         cursor.close();
     }
+
 
     @SuppressLint("SetTextI18n")
     private void loadSelectedCourses() {
@@ -112,10 +164,5 @@ public class StudentProfileActivity extends AppCompatActivity {
         tvSelectedCourses.setText(courseInfo.toString());
     }
 
-    private void exportStudentProfile() {
-        // 导出学生个人信息和成绩
-        Intent intent = new Intent(this, ExportProfileActivity.class);
-        intent.putExtra("studentId", studentId);
-        startActivity(intent);
-    }
+    // 移除 exportStudentProfile 方法
 }

@@ -51,6 +51,7 @@ public class NjuptInfoActivity extends Activity {
         if (navHome != null) {
             navHome.setOnClickListener(v -> {
                 Intent intent = new Intent(NjuptInfoActivity.this, adminActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();
             });

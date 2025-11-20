@@ -116,7 +116,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⚡ 教师功能"
+                        android:text="⚡ 快捷方式"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
@@ -155,13 +155,13 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/ic_student"
+                                    android:src="@drawable/ic_coursetable"
                                     app:tint="#4CAF50" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="个人信息"
+                                    android:text="授课表"
                                     android:textSize="12sp"
                                     android:textColor="#4CAF50"
                                     android:textStyle="bold"
@@ -197,13 +197,13 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/ic_teacher"
+                                    android:src="@drawable/ic_ranking"
                                     app:tint="#2196F3" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="修改密码"
+                                    android:text="成绩管理"
                                     android:textSize="12sp"
                                     android:textColor="#2196F3"
                                     android:textStyle="bold"
@@ -239,13 +239,13 @@
                                 <ImageView
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
-                                    android:src="@drawable/ic_ranking"
+                                    android:src="@drawable/ic_settings"
                                     app:tint="#FF9800" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="学生名单"
+                                    android:text="修改密码"
                                     android:textSize="12sp"
                                     android:textColor="#FF9800"
                                     android:textStyle="bold"
@@ -256,17 +256,20 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <!-- 占位卡片 -->
+                        <!-- 课程管理卡片 -->
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_course_management"
                             android:layout_width="0dp"
                             android:layout_height="90dp"
                             android:layout_margin="6dp"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="2dp"
-                            app:cardBackgroundColor="#F5F5F5"
+                            app:cardBackgroundColor="#F3E5F5"
                             app:layout_columnWeight="1"
                             app:layout_rowWeight="1"
-                            android:clickable="false">
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -275,12 +278,18 @@
                                 android:gravity="center"
                                 android:padding="12dp">
 
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_course"
+                                    app:tint="#9C27B0" />
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="+"
-                                    android:textSize="20sp"
-                                    android:textColor="#BDBDBD" />
+                                    android:text="课程管理"
+                                    android:textSize="12sp"
+                                    android:textColor="#9C27B0" />
 
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
@@ -288,7 +297,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 使用说明卡片 -->
+            <!-- 校区地图卡片 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -308,22 +317,44 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ℹ️ 使用说明"
+                        android:text="🗺️ 校区地图(点击放大/滑动查看更多)"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- 地图预览容器 -->
+                    <FrameLayout
+                        android:id="@+id/map_preview_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginBottom="8dp">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPager_maps"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                        <!-- 页面指示器 -->
+                        <LinearLayout
+                            android:id="@+id/layout_indicators"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_marginBottom="8dp"/>
+
+                    </FrameLayout>
 
                     <TextView
+                        android:id="@+id/tv_map_caption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="• 点击相应功能卡片即可进入对应功能界面\n• 如有问题请联系系统管理员"
+                        android:text="南京邮电大学仙林校区"
                         android:textSize="14sp"
                         android:textColor="#666666"
-                        android:lineSpacingExtra="4dp" />
-
+                        android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -354,14 +385,14 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
+                android:src="@drawable/ic_home_blue" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="首页"
                 android:textSize="12sp"
-                android:textColor="@android:color/black"
+                android:textColor="#1296db"
                 android:layout_marginTop="4dp" />
 
         </LinearLayout>

@@ -407,7 +407,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🗺️ 校区地图"
+                        android:text="🗺️ 校区地图(点击放大/滑动查看更多)"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
@@ -470,20 +470,21 @@
             android:orientation="vertical"
             android:gravity="center"
             android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
+                android:src="@drawable/ic_home_blue"
+                android:tintMode="src_in"
+                app:tint="#2196F3" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="首页"
                 android:textSize="12sp"
-                android:textColor="@android:color/black"
+                android:textColor="#2196F3"
                 android:layout_marginTop="4dp" />
 
         </LinearLayout>

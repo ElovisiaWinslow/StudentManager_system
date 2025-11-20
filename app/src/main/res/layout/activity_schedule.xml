@@ -402,7 +402,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
+                android:src="@drawable/ic_home_black" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -429,14 +429,14 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_manage" />
+                android:src="@drawable/ic_manage_blue" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="管理"
-                android:textColor="@android:color/black"
+                android:textColor="#1296db"
                 android:textSize="12sp" />
 
         </LinearLayout>
