@@ -11,9 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.studentmanager_system.Tools.Course;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class myDatabaseHelper extends SQLiteOpenHelper {
 
@@ -32,30 +30,32 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
     // 表结构SQL语句
     public static final String CREATE_ADMIN = "create table " + ADMIN_TABLE + " (" +
-            "id integer primary key autoincrement, " +
-            "name text not null, " +
-            "password text not null)";
+        "id integer primary key autoincrement, " +
+        "name text not null check(length(name) > 0 and length(name) <= 20), " +
+        "password text not null check(length(password) >= 6 and length(password) <= 24))";
+
 
     // 修改后的学生表结构（删除ranking字段，添加GPA字段）
     public static final String CREATE_STUDENT = "create table " + STUDENT_TABLE + " (" +
-            "id text primary key, " +
-            "name text not null, " +
-            "password text not null, " +
-            "sex text not null, " +
-            "number text default 0, " +
-            "grade real default 0, " +         // 添加年级字段
-            "class text default 0, " +          // 添加班级字段
-            "completedCredits real default 0, " +
-            "GPA real default 0)";           // 新增：GPA字段
+        "id text primary key check(length(id) = 9), " +
+        "name text not null check(length(name) > 0 and length(name) <= 20), " +
+        "password text not null check(length(password) >= 6 and length(password) <= 24), " +
+        "sex text not null, " +
+        "number text default '00000000000' check(length(number) = 11), " +
+        "grade real default 0, " +
+        "class text default 0, " +
+        "completedCredits real default 0, " +
+        "GPA real default 0)";
+
 
 
     // 修改后：教师表结构（添加所在学院和所在系字段）
     public static final String CREATE_TEACHER = "create table " + TEACHER_TABLE + " (" +
-            "id text primary key, " +
-            "name text not null, " +
-            "password text not null, " +
-            "sex text, " +  // 性别（可空）
-            "phone text, " +  // 电话（可空）
+            "id text primary key check(length(id) = 9), " +
+            "name text not null check(length(name) > 0 and length(name) <= 20), " +
+            "password text not null check(length(password) >= 6 and length(password) <= 24), " +
+            "sex text not null, " +  // 性别
+            "phone text default '00000000000' check(length(phone) = 11), " +  // 电话
             "college text, " +  // 所在学院（新增字段）
             "department text, " +  // 所在系（新增字段）
             "course text)";  // 教授课程（替换原来的subject字段）

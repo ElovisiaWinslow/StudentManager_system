@@ -78,7 +78,6 @@ public class add_teacherinfoActivity extends Activity {
         String sex = sexEt.getText().toString().trim();
         String phone = phoneEt.getText().toString().trim();
         String course = courseEt.getText().toString().trim();
-        // 获取新增字段的值
         String college = collegeEt.getText().toString().trim();
         String department = departmentEt.getText().toString().trim();
 
@@ -88,11 +87,25 @@ public class add_teacherinfoActivity extends Activity {
             return;
         }
 
-        if (!password.matches("[0-9]{6}")) {
-            Toast.makeText(this, "密码必须为6位数字", Toast.LENGTH_SHORT).show();
+        // 验证教师ID长度
+        if (id.length() != 9) {
+            Toast.makeText(this, "教师ID必须为9位", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // 验证密码长度
+        if (password.length() < 6 || password.length() > 24) {
+            Toast.makeText(this, "密码长度必须为6-24位", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 验证姓名长度
+        if (name.length() > 20) {
+            Toast.makeText(this, "姓名长度不能超过20个字符", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 验证性别
         if (!TextUtils.isEmpty(sex) && !sex.matches("[男女]")) {
             Toast.makeText(this, "性别请输入'男'或'女'", Toast.LENGTH_SHORT).show();
             return;

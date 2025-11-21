@@ -61,8 +61,6 @@ public class add_studentinfoActivity extends Activity {
         Button sure = findViewById(R.id.add_student_layout_sure);
         //将数据插入数据库
         sure.setOnClickListener(v -> {
-            //sex不能为空否则程序崩溃，因为在StudentAdapter中有一个ImageView要设置图片
-            //我这里要求id,name,sex都不能为空
             String id_ = id.getText().toString();
             String name_ = name.getText().toString();
             String sex_ = sex.getText().toString();
@@ -72,37 +70,25 @@ public class add_studentinfoActivity extends Activity {
             String grade_ = grade.getText().toString();
             String class__ = class_.getText().toString();
 
-            if (!TextUtils.isEmpty(id_) && !TextUtils.isEmpty(name_) && !TextUtils.isEmpty(sex_)) {
+            // 添加输入验证
+            if (!validateStudentInput(id_, name_, sex_, password_, number_)) {
+                return;
+            }
 
-                if (sex_.matches("[女|男]")) {
-                    SQLiteDatabase db = dbHelper.getWritableDatabase();
-                    db.beginTransaction();//开启事务
+            if (sex_.matches("[女|男]")) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.beginTransaction();//开启事务
 
-                    // 如果是修改模式，先删除旧数据
-                    if (Objects.equals(oldData.getStringExtra("haveData"), "true")) {
-                        db.execSQL("delete from student where id=?", new String[]{oldID});//删除旧数据
-                    }
+                // 如果是修改模式，先删除旧数据
+                if (Objects.equals(oldData.getStringExtra("haveData"), "true")) {
+                    db.execSQL("delete from student where id=?", new String[]{oldID});//删除旧数据
+                }
 
-                    //判断学号是否重复
-                    Cursor cursor = db.rawQuery("select * from student where id=?", new String[]{id_});
-                    if (cursor.moveToNext()) {
-                        // 如果是修改且学号未改变，允许更新
-                        if (Objects.equals(oldData.getStringExtra("haveData"), "true") && id_.equals(oldID)) {
-                            cursor.close();
-                            // 在插入语句中添加年级和班级字段
-                            db.execSQL("insert into student(id,name,sex,password,number,grade,class) values(?,?,?,?,?,?,?)",
-                                    new String[]{id_, name_, sex_, password_, number_, grade_, class__});
-                            db.setTransactionSuccessful();//事务执行成功
-                            db.endTransaction();//结束事务
-
-                            Toast.makeText(add_studentinfoActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
-                            finish(); // 返回学生管理页面
-                        } else {
-                            Toast.makeText(add_studentinfoActivity.this, "已有学生使用该学号,请重新输入", Toast.LENGTH_SHORT).show();
-                            cursor.close();
-                            db.endTransaction();
-                        }
-                    } else {
+                //判断学号是否重复
+                Cursor cursor = db.rawQuery("select * from student where id=?", new String[]{id_});
+                if (cursor.moveToNext()) {
+                    // 如果是修改且学号未改变，允许更新
+                    if (Objects.equals(oldData.getStringExtra("haveData"), "true") && id_.equals(oldID)) {
                         cursor.close();
                         // 在插入语句中添加年级和班级字段
                         db.execSQL("insert into student(id,name,sex,password,number,grade,class) values(?,?,?,?,?,?,?)",
@@ -110,20 +96,65 @@ public class add_studentinfoActivity extends Activity {
                         db.setTransactionSuccessful();//事务执行成功
                         db.endTransaction();//结束事务
 
-                        Toast.makeText(add_studentinfoActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(add_studentinfoActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
                         finish(); // 返回学生管理页面
+                    } else {
+                        Toast.makeText(add_studentinfoActivity.this, "已有学生使用该学号,请重新输入", Toast.LENGTH_SHORT).show();
+                        cursor.close();
+                        db.endTransaction();
                     }
                 } else {
-                    Toast.makeText(add_studentinfoActivity.this, "请输入正确的性别信息", Toast.LENGTH_SHORT).show();
+                    cursor.close();
+                    // 在插入语句中添加年级和班级字段
+                    db.execSQL("insert into student(id,name,sex,password,number,grade,class) values(?,?,?,?,?,?,?)",
+                            new String[]{id_, name_, sex_, password_, number_, grade_, class__});
+                    db.setTransactionSuccessful();//事务执行成功
+                    db.endTransaction();//结束事务
+
+                    Toast.makeText(add_studentinfoActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+                    finish(); // 返回学生管理页面
                 }
-
             } else {
-                Toast.makeText(add_studentinfoActivity.this, "姓名，学号，性别均不能为空", Toast.LENGTH_SHORT).show();
+                Toast.makeText(add_studentinfoActivity.this, "请输入正确的性别信息", Toast.LENGTH_SHORT).show();
             }
-
         });
-
     }
+
+    // 验证学生输入信息是否符合约束条件
+    private boolean validateStudentInput(String id, String name, String sex, String password, String number) {
+        // 检查必填字段
+        if (TextUtils.isEmpty(id) || TextUtils.isEmpty(name) || TextUtils.isEmpty(sex)) {
+            Toast.makeText(add_studentinfoActivity.this, "姓名，学号，性别均不能为空", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // 验证学号长度为9位
+        if (id.length() != 9) {
+            Toast.makeText(add_studentinfoActivity.this, "学号必须为9位字符", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // 验证姓名长度不超过20个字符
+        if (name.length() > 20) {
+            Toast.makeText(add_studentinfoActivity.this, "姓名不能超过20个字符", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // 验证密码长度在6-24个字符之间
+        if (password.length() < 6 || password.length() > 24) {
+            Toast.makeText(add_studentinfoActivity.this, "密码长度必须在6-24个字符之间", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // 验证电话号码长度为11位
+        if (!TextUtils.isEmpty(number) && number.length() != 11) {
+            Toast.makeText(add_studentinfoActivity.this, "电话号码必须为11位字符", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
 
     //恢复旧数据
     private void initInfo() {

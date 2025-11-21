@@ -95,8 +95,20 @@ public class admin_login_activity extends Activity {
                     String firstPasswordInfo = firstPassword.getText().toString();
                     String secondPasswordInfo = secondPassword.getText().toString();
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
-                    //检测密码是否为6个数字
-                    if (firstPasswordInfo.matches("[0-9]{6}")){
+
+                    // 检查用户名是否为空且不超过20个字符
+                    if (nameInfo.isEmpty()) {
+                        Toast.makeText(admin_login_activity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (nameInfo.length() > 20) {
+                        Toast.makeText(admin_login_activity.this, "用户名不能超过20个字符", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // 检测密码长度是否为6-24位
+                    if (firstPasswordInfo.length() >= 6 && firstPasswordInfo.length() <= 24){
                         //两次密码相同
                         if (firstPasswordInfo.equals(secondPasswordInfo)){
                             @SuppressLint("Recycle") Cursor cursor = db.rawQuery("select name from admin where name=? ", new String[]{nameInfo});
@@ -104,18 +116,26 @@ public class admin_login_activity extends Activity {
                             if (cursor.moveToNext()){
                                 Toast.makeText(admin_login_activity.this,"该用户已经存在",Toast.LENGTH_SHORT).show();
                             }else{
-                                db.execSQL("insert into admin(name,password)values(?,?)", new String[]{nameInfo, firstPasswordInfo});
+                                try {
+                                    db.execSQL("insert into admin(name,password)values(?,?)", new String[]{nameInfo, firstPasswordInfo});
+                                    Toast.makeText(admin_login_activity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                } catch (android.database.sqlite.SQLiteConstraintException e) {
+                                    Toast.makeText(admin_login_activity.this, "用户名或密码不符合要求", Toast.LENGTH_LONG).show();
+                                } catch (Exception e) {
+                                    Toast.makeText(admin_login_activity.this, "注册失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }else{
                             Toast.makeText(admin_login_activity.this, "两次密码不相同", Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        Toast.makeText(admin_login_activity.this, "密码为6位纯数字", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(admin_login_activity.this, "密码长度必须为6-24位", Toast.LENGTH_SHORT).show();
                     }
                 } else{
                     Toast.makeText(admin_login_activity.this, "注册码错误", Toast.LENGTH_SHORT).show();
                 }
             });
+
 
             builder.create().show();
         });
